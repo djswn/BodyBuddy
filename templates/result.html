@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>입력 결과</title>
+</head>
+<body>
+  <h1>입력 완료! 사용자 정보</h1>
+  <ul>
+    {% for key, value in user_info.items() %}
+      <li>{{ key }} : {{ value }}</li>
+    {% endfor %}
+  </ul>
+  <a href="/">다시 입력하기</a>
+</body>
+</html>
