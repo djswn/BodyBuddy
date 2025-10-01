@@ -1,0 +1,19 @@
+<!-- templates/result.html -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>결과 페이지</title>
+</head>
+<body>
+    <h1>사용자 결과</h1>
+    <p>이름: {{ user_info.name }}</p>
+    <p>나이: {{ user_info.age }}</p>
+    <p>키: {{ user_info.height }} cm</p>
+    <p>체중: {{ user_info.weight }} kg</p>
+    <p>BMI: {{ bmi }}</p>
+    <p>BMR: {{ bmr }}</p>
+
+    <a href="/userInfo">다시 입력하기</a>
+</body>
+</html>
