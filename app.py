@@ -28,14 +28,14 @@ def userInfo():
 @app.route('/result', methods=['POST'])
 def result():
     # HTML 폼에서 값 받기
+    name = request.form['name']
     weight = float(request.form['weight'])
     height = float(request.form['height'])
     age = int(request.form['age'])
     gender = request.form['gender']
+    body_fat = float(request.form.get('body_fat', 0.0))  # 체지방률이 없으면 0.0으로 설정
 
     # 아직 안 받는 값은 기본값 처리
-    name = "사용자"
-    body_fat = 0.0
     target_weight = weight
     diet_period_weeks = 0
 
