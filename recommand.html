@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>맞춤 식단 추천</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='recommand.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🍽️ 맞춤 식단 추천</h1>
+            <p class="subtitle">{{ user_info.name }}님을 위한 개인 맞춤 식단입니다</p>
+        </header>
+
+        <div class="user-info">
+            <div class="info-card">
+                <h3>📊 현재 상태</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="label">현재 체중:</span>
+                        <span class="value">{{ user_info.weight }}kg</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">목표 체중:</span>
+                        <span class="value">{{ user_info.target_weight }}kg</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">BMI:</span>
+                        <span class="value">{{ bmi }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">기초대사율:</span>
+                        <span class="value">{{ bmr }}kcal</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="diet-plan">
+            <h2>🎯 추천 식단 계획</h2>
+            
+            <div class="diet-type">
+                <h3>{{ diet_type }}</h3>
+                <p class="diet-description">{{ diet_description }}</p>
+            </div>
+
+            <div class="daily-calories">
+                <h3>📈 일일 권장 칼로리</h3>
+                <div class="calorie-info">
+                    <div class="calorie-item">
+                        <span class="calorie-label">기초대사율:</span>
+                        <span class="calorie-value">{{ bmr }}kcal</span>
+                    </div>
+                    <div class="calorie-item">
+                        <span class="calorie-label">권장 섭취량:</span>
+                        <span class="calorie-value">{{ recommended_calories }}kcal</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="meal-plans">
+                <h3>🍽️ 식단 구성</h3>
+                
+                <div class="meal-section">
+                    <h4>🌅 아침 ({{ breakfast_calories }}kcal)</h4>
+                    <div class="meal-items">
+                        {% for item in breakfast %}
+                        <div class="meal-item">
+                            <span class="food-name">{{ item.name }}</span>
+                            <span class="food-calories">{{ item.calories }}kcal</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="meal-section">
+                    <h4>🌞 점심 ({{ lunch_calories }}kcal)</h4>
+                    <div class="meal-items">
+                        {% for item in lunch %}
+                        <div class="meal-item">
+                            <span class="food-name">{{ item.name }}</span>
+                            <span class="food-calories">{{ item.calories }}kcal</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="meal-section">
+                    <h4>🌙 저녁 ({{ dinner_calories }}kcal)</h4>
+                    <div class="meal-items">
+                        {% for item in dinner %}
+                        <div class="meal-item">
+                            <span class="food-name">{{ item.name }}</span>
+                            <span class="food-calories">{{ item.calories }}kcal</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="meal-section">
+                    <h4>🍎 간식 ({{ snack_calories }}kcal)</h4>
+                    <div class="meal-items">
+                        {% for item in snacks %}
+                        <div class="meal-item">
+                            <span class="food-name">{{ item.name }}</span>
+                            <span class="food-calories">{{ item.calories }}kcal</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="tips-section">
+                <h3>💡 식단 팁</h3>
+                <ul class="tips-list">
+                    {% for tip in diet_tips %}
+                    <li>{{ tip }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <a href="/home" class="btn btn-secondary">홈으로</a>
+            <a href="/userInfo" class="btn btn-primary">다시 입력</a>
+        </div>
+    </div>
+</body>
+</html>
