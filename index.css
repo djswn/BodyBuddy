@@ -1,0 +1,53 @@
+body {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 50px;
+}
+
+#start-btn {
+    padding: 8px 18px;
+    margin: 30px 0 5px 0;
+    background-color: rgb(206, 230, 206);
+    border-color: rgb(206, 230, 206);
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+#login-btn {
+    padding: 5px 10px;
+    margin: 5px;
+    border-radius: 4px;
+    border: none;
+    background-color: transparent;
+    font-size: 15px;
+}
+
+#start-btn:hover {
+    background-color: aliceblue;
+    border-color: aliceblue;
+}
+
+#login-btn:hover {
+    color:rgb(159, 159, 159);
+}
+
+h1 {
+    font-size: 60px;
+    padding: 0;
+    margin: 0;
+}
+
+p {
+    font-size: 20px;
+    margin-top: 5px;
+    padding: 0px;
+}
+
+#image {
+    width: 400px;
+    height: 400px;
+    object-fit: contain;
+}
