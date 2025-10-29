@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>결과 페이지</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 40px;
+    }
+
+    .left-panel {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .character-img {
+      width: 250px;
+      height: 300px;
+      background-color: #f0f0f0; /* 이미지 자리 placeholder */
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .weight-control {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .weight-control button {
+      padding: 6px 12px;
+      font-size: 18px;
+      border: none;
+      border-radius: 4px;
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+    }
+    .weight-control button:hover {
+      background-color: #45a049;
+    }
+
+    .comment {
+      font-size: 16px;
+      color: #444;
+      margin-top: 5px;
+    }
+
+    .right-panel {
+      flex: 1;
+      max-width: 420px;
+    }
+
+    .section {
+      margin-bottom: 20px;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background-color: #fafafa;
+    }
+
+    .section h3 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 18px;
+      color: #333;
+    }
+
+    .section ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .back-btn {
+      position: fixed;
+      bottom: 10px;
+      left: 10px;
+      width: auto;
+      padding: 8px 16px;
+      background: #888;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      z-index: 9999;
+    }
+    .back-btn:hover {
+      background: #666;
+    }
+  </style>
+</head>
+<body>
+  <!-- 좌측: 캐릭터 + 체중/증감 + 멘트 -->
+  <div class="left-panel">
+    <div class="character-img"></div>
+
+    <form method="POST" action="{{ url_for('update_weight') }}" class="weight-control">
+      <button type="submit" name="action" value="minus">-</button>
+      <span>{{ weight }} kg</span>
+      <button type="submit" name="action" value="plus">+</button>
+      <input type="hidden" name="weight" value="{{ weight }}">
+      <input type="hidden" name="user_id" value="{{ user_id }}">
+    </form>
+
+    <div class="comment">{{ comment }}</div>
+  </div>
+
+  <!-- 우측: 오늘의 추천 식단 / 오늘의 운동 -->
+  <div class="right-panel">
+    <div class="section">
+      <h3>이렇게 드셔보세요!</h3>
+      <ul>
+        {% for meal, menu in meals.items() %}
+          <li><strong>{{ meal }}</strong>: {{ menu }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="section">
+      <h3>오늘은 이거다!</h3>
+      <p>{{ exercise }}</p>
+    </div>
+  </div>
+
+  <!-- 뒤로가기 버튼 -->
+  <button class="back-btn" onclick="history.back()">뒤로가기</button>
+</body>
+</html>
