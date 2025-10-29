@@ -1,0 +1,19 @@
+MEAL_PLANS = {
+    "아침": ["귀리 + 계란", "고구마 100g + 닭가슴살 100g", "삶은 계란 2개 + 바나나 1개", "현미밥 100g + 두부구이"],
+    "점심": ["현미밥 150g + 닭가슴살 100g + 채소류 100g", "잡곡밥 + 연어구이 + 샐러드", "곤약밥 + 소고기불고기 + 나물", "현미밥 + 두부조림 + 김치"],
+    "저녁": ["샐러드 + 연어", "고구마 100g + 닭가슴살 100g", "두부스테이크 + 채소볶음", "현미밥 + 계란말이 + 나물"],
+    "간식": ["고구마 50g", "삶은 계란 1개", "그릭요거트 + 견과류", "바나나 1개"]
+}
+
+EXERCISES = ["30분 조깅", "자전거 타기 40분", "홈트 HIIT 20분", "요가 30분", "수영 1시간", "줄넘기 1000개"]
+
+def get_daily_meals():
+    today = datetime.date.today()
+    random.seed(today.toordinal())
+    return {meal: random.choice(options) for meal, options in MEAL_PLANS.items()}
+
+def get_daily_exercise():
+    today = datetime.date.today()
+    random.seed(today.toordinal() + 999)
+    return random.choice(EXERCISES)
+
