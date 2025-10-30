@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BodyBuddy</title>
+    <style>
+    .user-edit-link {
+        position: absolute;
+        top: 20px;
+        right: 30px;
+        z-index: 100;
+        background: #667eea;
+        color: #fff;
+        padding: 10px 22px;
+        border-radius: 20px;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 15px;
+        box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        transition: background 0.2s;
+    }
+    .user-edit-link:hover {
+        background: #4a5568;
+    }
+    </style>
+</head>
+<body>
+    <a href="/user_edit" class="user-edit-link">🔒 개인정보 수정</a>
+    <img id="image" src="{{ url_for('static', filename='images/normal.png') }}" alt="정상" width="300">
+    <p>60kg</p>
+    
+    
+</body>
+</html>
