@@ -1,0 +1,50 @@
+<!-- templates/result.html -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>결과 페이지</title>
+  <style>
+    body { font-family: sans-serif; margin: 40px; display: flex; gap: 20px; }
+    .left, .right { flex: 1; }
+    .card { border: 1px solid #ddd; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+    button { padding: 6px 12px; margin: 4px; }
+    .image-box { width:100%; height:200px; border:1px dashed #aaa; margin-bottom:20px; display:flex; align-items:center; justify-content:center; color:#aaa; }
+  </style>
+</head>
+<body>
+  <div class="left">
+    <div class="image-box">이미지 영역 (비워둠)</div>
+    <div class="card">
+      <h2>{{ user_info.name }}님의 결과</h2>
+      <p>BMI: {{ bmi }}</p>
+      <p>BMR: {{ bmr }}</p>
+      <p>현재 체중: {{ weight }} kg</p>
+      <form method="POST" action="{{ url_for('update_weight') }}">
+        <input type="hidden" name="weight" value="{{ weight }}">
+        <button type="submit" name="action" value="minus">-1kg</button>
+        <button type="submit" name="action" value="plus">+1kg</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="card">
+      <h3>오늘의 추천 식단</h3>
+      <ul>
+        {% for meal, menu in meals.items() %}
+          <li>{{ meal }}: {{ menu }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="card">
+      <h3>추천 운동</h3>
+      <p>{{ exercise }}</p>
+    </div>
+    <div class="card">
+      <h3>AI 코멘트</h3>
+      <p>{{ comment }}</p>
+    </div>
+  </div>
+</body>
+</html>
