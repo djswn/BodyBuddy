@@ -1,0 +1,12 @@
+def get_character_image(weight, height, age, gender, bmr):
+    bmi = calculate_bmi(weight, height)
+
+    if bmi < 18.5:
+        return url_for('static', filename='images/gonyani.jpeg')
+    elif 18.5 <= bmi < 23:
+        if gender == 'female' and age >= 35 and bmr < 1400:
+            return url_for('static', filename='images/fat_gonyani.png')
+        else:
+            return url_for('static', filename='images/gonyani.jpeg')
+    else:
+        return url_for('static', filename='images/fat_gonyani.png')
