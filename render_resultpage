@@ -1,0 +1,14 @@
+character_img = get_character_image(current_weight, user_info['height'], user_info['age'], gender, bmr)
+...
+return render_template(
+        'character&diet,exercise.html',
+        user_info=user_info,
+        bmi=bmi,
+        bmr=bmr,
+        meals=meals,
+        exercise=exercise,
+        comment=comment,
+        weight=current_weight,
+        user_id=user_id,
+        character_img=character_img
+    )
