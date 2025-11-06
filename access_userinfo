@@ -1,6 +1,0 @@
- <!-- 상단 내 정보 버튼 -->
-  <div class="top-bar">
-    <a href="{{ url_for('userInfo', user_id=user_id) }}">
-      <button class="info-btn">내 정보</button>
-    </a>
-  </div>

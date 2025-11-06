@@ -4,52 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <title>결과 페이지</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='result.css') }}">
 </head>
 <body>
-    <div class="result-container">
-        <h1 class="result-title">📊 건강 분석 결과</h1>
-        
-        <div class="result-item">
-            <div class="result-label">👤 이름</div>
-            <div class="result-value">{{ user_info.name }}</div>
-        </div>
-        
-        <div class="result-item">
-            <div class="result-label">🎂 나이</div>
-            <div class="result-value">{{ user_info.age }}세</div>
-        </div>
-        
-        <div class="result-item">
-            <div class="result-label">📏 키</div>
-            <div class="result-value">{{ user_info.height }} cm</div>
-        </div>
-        
-        <div class="result-item">
-            <div class="result-label">⚖️ 체중</div>
-            <div class="result-value">{{ user_info.weight }} kg</div>
-        </div>
-        
-        {% if user_info.body_fat > 0 %}
-        <div class="result-item">
-            <div class="result-label">💪 체지방률</div>
-            <div class="result-value">{{ user_info.body_fat }}%</div>
-        </div>
-        {% endif %}
-        
-        <div class="bmi-bmr">
-            <div class="result-item">
-                <div class="result-label">📈 BMI</div>
-                <div class="result-value">{{ bmi }}</div>
-            </div>
-            
-            <div class="result-item">
-                <div class="result-label">🔥 BMR</div>
-                <div class="result-value">{{ bmr }} kcal</div>
-            </div>
-        </div>
+    <h1>사용자 결과</h1>
+    <p>이름: {{ user_info.name }}</p>
+    <p>나이: {{ user_info.age }}</p>
+    <p>키: {{ user_info.height }} cm</p>
+    <p>체중: {{ user_info.weight }} kg</p>
+    <p>BMI: {{ bmi }}</p>
+    <p>BMR: {{ bmr }}</p>
 
-        <a href="/userInfo" class="back-button">🔄 다시 입력하기</a>
-    </div>
+    <a href="/userInfo">다시 입력하기</a>
+
+<!-- 뒤로가기 버튼-->
+<button class="back-btn" onclick="history.back()">뒤로가기</button>
 </body>
 </html>
