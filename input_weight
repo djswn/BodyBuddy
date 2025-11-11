@@ -1,0 +1,78 @@
+  <div class="weight-control">
+  <button type="button" onclick="updateWeight('minus')">-</button>
+  <span id="weight-display" onclick="enableEdit()">{{ weight }} kg</span>
+  <button type="button" onclick="updateWeight('plus')">+</button>
+    </div>
+
+    <div class="comment" id="comment">{{ comment }}</div>
+  </div>
+
+<!-- JS: AJAX 요청 -->
+  <script>
+    function updateWeight(action) {
+      const currentWeight = document.getElementById("weight-display").innerText.split(" ")[0];
+      fetch("/update_weight", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `user_id={{ user_id }}&weight=${currentWeight}&action=${action}`
+      })
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById("weight-display").innerText = data.weight + " kg";
+        document.getElementById("weight").innerText = data.weight; // 좌측 표 갱신
+        document.getElementById("comment").innerText = data.comment;
+        document.getElementById("character-img").src = data.character_img;
+      });
+    }
+
+   function enableEdit() {
+    const span = document.getElementById("weight-display");
+    const currentValue = span.innerText.replace(" kg", "");
+    const input = document.createElement("input");
+    input.type = "number";
+    input.step = "0.1";
+    input.value = currentValue;
+    input.id = "weight-input";
+
+    // 기존 스타일 유지
+    input.style.width = "100px";          // 조금 넉넉하게
+    input.style.fontSize = "28px";        // 기존 글씨 크기
+    input.style.fontWeight = "bold";      // 기존 굵기
+    input.style.textAlign = "center";     // 가운데 정렬
+
+     span.replaceWith(input);
+     input.focus();
+
+    input.addEventListener("blur", () => saveWeight(input.value));
+    input.addEventListener("keydown", (e) => {
+    
+      if (e.key === "Enter") {
+      saveWeight(input.value);
+    }
+  });
+}
+
+    function saveWeight(newWeight) {
+    fetch("/update_weight", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: `user_id={{ user_id }}&weight=${newWeight}&action=set`
+    })
+    .then(response => response.json())
+    .then(data => {
+      const input = document.getElementById("weight-input");
+      const span = document.createElement("span");
+      span.id = "weight-display";
+      span.innerText = data.weight + " kg";
+      span.onclick = enableEdit;
+      input.replaceWith(span);
+
+      updateDisplay(data.weight, data.comment, data.character_img);
+    });
+  }
+
+  function updateDisplay(weight, comment, character_img) {
+    document.getElementById("weight").innerText = weight;
+    document.getElementById("comment").innerText = comment;
+    document.getElementById("character-img").src = character_img;
+  }
