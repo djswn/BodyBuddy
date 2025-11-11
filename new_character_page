@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>결과 페이지</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center; /* 중앙 기준으로 모으기 */
+      align-items: flex-start;
+      gap: 80px; /* 좌우 간격 조절 */
+    }
+
+    /* 좌측 상단 내 정보 버튼 */
+    .top-bar {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+    }
+    .info-btn {
+      padding: 8px 16px;
+      background: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .info-btn:hover {
+      background: #0056b3;
+    }
+
+    .left-panel {
+      flex: 0 0 300px;
+      margin-top: 60px; /* 표를 조금 내려줌 */
+    }
+
+    .user-info-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    .user-info-table th, .user-info-table td {
+      border: 1px solid #ccc;
+      padding: 6px;
+      text-align: left;
+    }
+    .user-info-table th {
+      background-color: #f0f0f0;
+      width: 40%;
+    }
+
+    .right-panel {
+      flex: 0 0 500px; /* 우측 영역 고정 폭 */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .character-img {
+      width: 350px; /* 캐릭터 이미지 크게 */
+      height: 420px;
+      background-color: #f0f0f0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin-bottom: 30px;
+      overflow: hidden;
+    }
+
+    .character-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .weight-control {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+      font-size: 28px; /* 글자 크기 키움 */
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .weight-control button {
+      padding: 12px 20px; /* 버튼 크기 키움 */
+      font-size: 24px;
+      border: none;
+      border-radius: 6px;
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+    }
+    .weight-control button:hover {
+      background-color: #45a049;
+    }
+
+    .comment {
+      font-size: 16px; /* 코멘트 크기 키움 */
+      color: #444;
+      margin-top: 20px;
+      text-align: center;
+      max-width: 500px;
+      line-height: 1.6;
+    }
+
+    .bottom-bar {
+      position: fixed;
+      bottom: 10px;
+      left: 10px;
+      display: flex;
+      gap: 10px; /* 버튼 간격 */
+      z-index: 9999;
+    }
+    .back-btn, .commend-btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      color: white;
+    }
+    .back-btn {
+      background: #888;
+    }
+    .back-btn:hover {
+      background: #666;
+    }
+    .commend-btn {
+      background: #FF9800;
+    }
+    .commend-btn:hover {
+      background: #e68900;
+    }
+  </style>
+</head>
+<body>
+  <!-- 좌측 상단 내 정보 버튼 -->
+  <div class="top-bar">
+    <a href="{{ url_for('userInfo', user_id=user_id) }}">
+      <button class="info-btn">내 정보</button>
+    </a>
+  </div>
+
+  <!-- 좌측: 사용자 정보 표 -->
+  <div class="left-panel">
+    <h3>{{ user_info.name }}님의 정보</h3>
+    <table class="user-info-table">
+      <tr><th>성별</th><td>{{ user_info.gender }}</td></tr>
+      <tr><th>나이</th><td>{{ user_info.age }}</td></tr>
+      <tr><th>신장(cm)</th><td>{{ user_info.height }}</td></tr>
+      <tr><th>체중(kg)</th><td>{{ user_info.weight }}</td></tr>
+      <tr><th>체지방률(%)</th><td>{{ user_info.body_fat }}</td></tr>
+      <tr><th>BMI</th><td>{{ bmi }}</td></tr>
+      <tr><th>BMR</th><td>{{ bmr }}</td></tr>
+      <tr><th>목표 체중</th><td>{{ user_info.target_weight }}</td></tr>
+      <tr><th>목표 기간(주)</th><td>{{ user_info.diet_period_weeks }}</td></tr>
+    </table>
+  </div>
+
+  <!-- 우측: 캐릭터 + 체중/증감 + 코멘트 -->
+  <div class="right-panel">
+    <div class="character-img">
+      <img src="{{ character_img }}" alt="내 캐릭터">
+    </div>
+
+    <form method="POST" action="{{ url_for('update_weight') }}" class="weight-control">
+      <button type="submit" name="action" value="minus">-</button>
+      <span>{{ weight }} kg</span>
+      <button type="submit" name="action" value="plus">+</button>
+      <input type="hidden" name="weight" value="{{ weight }}">
+      <input type="hidden" name="user_id" value="{{ user_id }}">
+    </form>
+
+    <div class="comment">{{ comment }}</div>
+  </div>
+
+  <!-- 하단: 뒤로가기 + 오늘의 추천 버튼 -->
+  <div class="bottom-bar">
+    <button class="back-btn" onclick="history.back()">뒤로가기</button>
+    <a href="{{ url_for('recommend', user_id=user_id) }}">
+      <button class="commend-btn">오늘의 추천</button>
+    </a>
+  </div>
+</body>
+</html>
