@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>사용자 정보 입력</title>
+</head>
+<body>
+    <h1>사용자 정보 입력</h1>
+    <!-- user_id를 url_for에 전달 -->
+    <form action="{{ url_for('userInfo', user_id=user_id) }}" method="post">
+      <label>이름: 
+        <input type="text" name="name" value="{{ user_info.name if user_info else '' }}" required>
+      </label><br>
+
+      <label>신장(cm): 
+        <input type="number" name="height" step="0.1" value="{{ user_info.height if user_info else '' }}" required>
+      </label><br>
+
+      <label>체중(kg): 
+        <input type="number" name="weight" step="0.1" value="{{ user_info.weight if user_info else '' }}" required>
+      </label><br>
+
+      <label>나이: 
+        <input type="number" name="age" value="{{ user_info.age if user_info else '' }}" required>
+      </label><br>
+
+      <label>성별:  
+        <select name="gender" required>
+          <option value="male" {% if user_info and user_info.gender == 'male' %}selected{% endif %}>남성</option>
+          <option value="female" {% if user_info and user_info.gender == 'female' %}selected{% endif %}>여성</option>
+        </select>
+      </label><br>
+
+      <label>체지방률(%): 
+        <input type="number" name="body_fat" step="0.1" value="{{ user_info.body_fat if user_info else '' }}">
+      </label><br>
+
+      <label>목표 체중(kg): 
+        <input type="number" name="target_weight" step="0.1" value="{{ user_info.target_weight if user_info else '' }}" required>
+      </label><br>
+
+      <label>다이어트 기간(주): 
+        <input type="number" name="diet_period" value="{{ user_info.diet_period_weeks if user_info else '' }}" required>
+      </label><br>
+
+      <button type="submit">입력 완료!</button>
+    </form>
+  
+    <!-- 뒤로가기 버튼-->
+    <button class="back-btn" onclick="history.back()">뒤로가기</button>
+</body>
+</html>
