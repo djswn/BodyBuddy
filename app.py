@@ -1,24 +1,20 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from utils.user import make_user_info
 from utils.bmi_bmr import calculate_bmi, calculate_bmr
 import datetime
 import json, os, random
 
 app = Flask(__name__)
-app.secret_key = "your_secret_key"  # 세션 저장용
+app.secret_key = "your_secret_key"
 
 DATA_FILE = "users.json"
 
-# 기존 데이터 불러오기
 if os.path.exists(DATA_FILE):
     with open(DATA_FILE, "r", encoding="utf-8") as f:
         users = json.load(f)
 else:
     users = {}
 
-# -------------------------------
-# 식단/운동 데이터 풀
-# -------------------------------
 MEAL_PLANS = {
     "아침": ["귀리 + 계란", "고구마 100g + 닭가슴살 100g", "삶은 계란 2개 + 바나나 1개", "현미밥 100g + 두부구이"],
     "점심": ["현미밥 150g + 닭가슴살 100g + 채소류 100g", "잡곡밥 + 연어구이 + 샐러드", "곤약밥 + 소고기불고기 + 나물", "현미밥 + 두부조림 + 김치"],
@@ -28,19 +24,19 @@ MEAL_PLANS = {
 
 EXERCISES = ["30분 조깅", "자전거 타기 40분", "홈트 HIIT 20분", "요가 30분", "수영 1시간", "줄넘기 1000개"]
 
+
 def get_daily_meals():
     today = datetime.date.today()
     random.seed(today.toordinal())
     return {meal: random.choice(options) for meal, options in MEAL_PLANS.items()}
+
 
 def get_daily_exercise():
     today = datetime.date.today()
     random.seed(today.toordinal() + 999)
     return random.choice(EXERCISES)
 
-# -------------------------------
-# AI 멘트 로직
-# -------------------------------
+
 def get_health_comment(weight, height, age, gender, bmr, target_weight):
     bmi = calculate_bmi(weight, height)
 
@@ -62,9 +58,7 @@ def get_health_comment(weight, height, age, gender, bmr, target_weight):
         else:
             return "비만 상태예요. 식단과 운동을 적극적으로 관리해 건강을 지켜주세요."
 
-# -------------------------------
-# 캐릭터 동적 이미지 결정 로직
-# -------------------------------
+
 def get_character_image(weight, height, age, gender, bmr):
     bmi = calculate_bmi(weight, height)
 
@@ -78,14 +72,40 @@ def get_character_image(weight, height, age, gender, bmr):
     else:
         return url_for('static', filename='images/fat_gonyani.png')
 
-# -------------------------------
-# 라우트
-# -------------------------------
+
+# 새로 추가: 체중 기록 저장 함수
+def save_weight_record(user_id, weight):
+    """날짜별 체중 기록 저장"""
+    today = datetime.date.today().isoformat()
+
+    if 'weight_history' not in users[user_id]:
+        users[user_id]['weight_history'] = []
+
+    # 오늘 날짜 기록이 있으면 업데이트, 없으면 추가
+    history = users[user_id]['weight_history']
+    updated = False
+    for record in history:
+        if record['date'] == today:
+            record['weight'] = weight
+            updated = True
+            break
+
+    if not updated:
+        history.append({'date': today, 'weight': weight})
+
+    # 날짜순 정렬
+    users[user_id]['weight_history'].sort(key=lambda x: x['date'])
+
+    with open(DATA_FILE, "w", encoding="utf-8") as f:
+        json.dump(users, f, ensure_ascii=False, indent=2)
+
+
 @app.route('/')
 def index():
     return render_template('index.html')
 
-@app.route('/login', methods=['GET','POST'])
+
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         user_id = request.form['user_id']
@@ -103,7 +123,8 @@ def login():
 
             meals = get_daily_meals()
             exercise = get_daily_exercise()
-            comment = get_health_comment(user_info['weight'], user_info['height'], user_info['age'], gender, bmr, user_info['target_weight'])
+            comment = get_health_comment(user_info['weight'], user_info['height'], user_info['age'], gender, bmr,
+                                         user_info['target_weight'])
             character_img = get_character_image(user_info['weight'], user_info['height'], user_info['age'], gender, bmr)
 
             return render_template(
@@ -123,7 +144,8 @@ def login():
 
     return render_template('login.html')
 
-@app.route('/register', methods=['GET','POST'])
+
+@app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
         user_id = request.form['user_id']
@@ -132,7 +154,7 @@ def register():
         if user_id in users:
             return "이미 존재하는 아이디입니다."
 
-        users[user_id] = {"password": password, "info": None}
+        users[user_id] = {"password": password, "info": None, "weight_history": []}
         with open(DATA_FILE, "w", encoding="utf-8") as f:
             json.dump(users, f, ensure_ascii=False, indent=2)
 
@@ -140,7 +162,8 @@ def register():
 
     return render_template('register.html')
 
-@app.route('/userInfo/<user_id>', methods=['GET','POST'])
+
+@app.route('/userInfo/<user_id>', methods=['GET', 'POST'])
 def userInfo(user_id):
     if request.method == 'POST':
         name = request.form['name']
@@ -154,6 +177,9 @@ def userInfo(user_id):
 
         user_info = make_user_info(name, age, height, weight, body_fat, target_weight, diet_period_weeks, gender)
         users[user_id]['info'] = user_info
+
+        # 초기 체중 기록
+        save_weight_record(user_id, weight)
 
         with open(DATA_FILE, "w", encoding="utf-8") as f:
             json.dump(users, f, ensure_ascii=False, indent=2)
@@ -180,6 +206,7 @@ def userInfo(user_id):
         )
     return render_template('userInfo.html', user_id=user_id)
 
+
 @app.route('/update_weight', methods=['POST'])
 def update_weight():
     user_id = request.form.get('user_id')
@@ -190,12 +217,15 @@ def update_weight():
     current_weight = float(request.form['weight'])
 
     if action == 'plus':
-        current_weight += 1
+        current_weight += 0.5
     elif action == 'minus':
-        current_weight -= 1
+        current_weight -= 0.5
 
-    # 사용자 정보 업데이트
     users[user_id]['info']['weight'] = current_weight
+
+    # 체중 변경 시 기록 저장
+    save_weight_record(user_id, current_weight)
+
     with open(DATA_FILE, "w", encoding="utf-8") as f:
         json.dump(users, f, ensure_ascii=False, indent=2)
 
@@ -230,8 +260,31 @@ def update_weight():
         character_img=character_img
     )
 
-# -------------------------------
-# 앱 실행
-# -------------------------------
+
+# 새로 추가: 그래프 페이지
+@app.route('/weight_graph/<user_id>')
+def weight_graph(user_id):
+    if user_id not in users or not users[user_id].get('info'):
+        return redirect(url_for('login'))
+
+    user_info = users[user_id]['info']
+    return render_template('weight_graph.html', user_id=user_id, user_info=user_info)
+
+
+# 새로 추가: 그래프 데이터 API
+@app.route('/api/weight_data/<user_id>')
+def weight_data(user_id):
+    if user_id not in users:
+        return jsonify({'error': 'User not found'}), 404
+
+    weight_history = users[user_id].get('weight_history', [])
+    target_weight = users[user_id].get('info', {}).get('target_weight', None)
+
+    return jsonify({
+        'history': weight_history,
+        'target_weight': target_weight
+    })
+
+
 if __name__ == '__main__':
     app.run(debug=True)
