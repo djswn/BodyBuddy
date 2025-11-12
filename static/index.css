@@ -1,22 +1,143 @@
+html, body {
+    padding: 0;
+    margin: 0;
+}
+
 body {
     display: flex;
     align-items: center;
     flex-direction: column;
-    justify-content: center;
-    padding-top: 50px;
+    justify-content: flex-start;
 }
+
+.background {
+    width: 100%;
+    height: 100px;
+    background-color: rgb(171, 212, 174);
+    margin-top: 0;
+    padding: 30px 0;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    overflow: hidden;
+}
+
+.gugi-regular {
+    position: relative;
+    font-family: "Gugi", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 60px;
+    z-index: 1;
+}
+
+.gugi-regular::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    height: 120px;
+    background-color: white;
+    border-radius: 50%;
+    background: radial-gradient(
+        ellipse at center,
+        rgba(230, 255, 230, 0.9) 0%,      /* 중심부 거의 흰색 */
+        rgba(200, 240, 200, 0.6) 40%,     /* 연초록빛 */
+        rgba(171, 212, 174, 0.3) 70%,     /* 배경색과 섞이게 */
+        rgba(171, 212, 174, 0) 100%       /* 가장자리는 투명 */
+
+    );
+    z-index: -1;
+    filter: blur(2px);
+}
+
+h1 {
+    font-size: 20px;
+    padding: 0;
+    margin: 0;
+}
+
+p {
+    font-size: 18px;
+}
+
+#image {
+    margin-top: 20px;
+    width: 430px;
+    height: 430px;
+    object-fit: contain;
+}
+
+.decoration, .decoration-flo {
+    position:absolute;
+    top: 200px;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 120px);
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.decoration {
+    position:absolute;
+    top: 150px;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 120px);
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.decoration-flo {
+    position:absolute;
+    top: 200px;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 120px);
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.decoration img {
+    position: absolute;
+    width: 150px;
+    opacity: 0.4;
+    filter: blur(0.3px);
+}
+
+.decoration-flo img {
+    position: absolute;
+    width: 100px;
+    opacity: 0.4;
+    filter: blur(0.3px);
+}
+
+.decoration img:nth-child(1) { top: 10%; left: 15%; transform: rotate(-10deg);}
+.decoration img:nth-child(2) { top: 65%; left: 25%; transform: rotate(-10deg);}
+.decoration img:nth-child(3) { top: 15%; left: 80%;}
+.decoration img:nth-child(4) { top: 70%; left: 85%;}
+.decoration img:nth-child(5) { top: 50%; left: 68%; transform: rotate(-10deg);}
+
+.decoration-flo img:nth-child(1) { top: 25%; left: 28%;}
+.decoration-flo img:nth-child(2) { top: 55%; left: 5%;}
+.decoration-flo img:nth-child(3) { top: 30%; left: 90%;}
+
 
 #start-btn {
     padding: 8px 18px;
     margin: 30px 0 5px 0;
     background-color: rgb(206, 230, 206);
     border-color: rgb(206, 230, 206);
-    border-radius: 4px;
     font-weight: bold;
     font-size: 20px;
 }
 
-#login-btn {
+#register-btn {
     padding: 5px 10px;
     margin: 5px;
     border-radius: 4px;
@@ -25,47 +146,12 @@ body {
     font-size: 15px;
 }
 
-.back-btn {
-  position: fixed;
-  bottom: 10px;
-  left: 10px;
-  width: auto !important;          /* 뒤로 가기 버튼, 가로 전체 차지하지 않음 */
-  padding: 8px 16px;
-  background: #888;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  z-index: 9999;
-}
-
 #start-btn:hover {
     background-color: aliceblue;
     border-color: aliceblue;
 }
 
-#login-btn:hover {
+#register-btn:hover {
     color:rgb(159, 159, 159);
 }
 
-.back-btn:hover {
-  background: #666;
-}
-
-h1 {
-    font-size: 60px;
-    padding: 0;
-    margin: 0;
-}
-
-p {
-    font-size: 20px;
-    margin-top: 5px;
-    padding: 0px;
-}
-
-#image {
-    width: 400px;
-    height: 400px;
-    object-fit: contain;
-}

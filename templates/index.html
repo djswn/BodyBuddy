@@ -4,23 +4,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BodyBuddy</title>
+    <style>
+        html, body { margin:0; padding:0; height:100%; width:100%; }
+        .background { width:100%; background-color:rgb(171,212,174); padding:30px 0; margin:0; position:fixed; top:0; left:0; }
+    </style>
+
     <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gugi&family=Momo+Trust+Display&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h1>BODYBUDDY</h1>
-    <p>다이어트 및 벌크업을 위한 식단 & 체중 관리</p>
+    <div class="background">
+        <h1>.・。.・゜✭・<span class="gugi-regular">BODYBUDDY</span>・✫・゜・。.</h1>
+    </div>
+        <!-- 캐릭터 이미지 -->
+        <img id="image" src="{{ url_for('static', filename='images/normal.png') }}" alt="정상" width="300">
+        <p>마우스를 올려 가나디를 안아주세요 !</p>
 
-    <!-- 캐릭터 이미지 -->
-    <img id="image" src="{{ url_for('static', filename='images/normal.png') }}" alt="정상" width="300">
+        <div class="decoration">
+            <img src="{{ url_for('static', filename='images/grass1.png') }}" alt="wave">
+            <img src="{{ url_for('static', filename='images/grass2.png') }}" alt="wave">
+            <img src="{{ url_for('static', filename='images/grass3.png') }}" alt="">
+            <img src="{{ url_for('static', filename='images/grass4.png') }}" alt="">
+            <img src="{{ url_for('static', filename='images/grass5.png') }}" alt="">
+        </div>
 
-    <!-- 시작하기 버튼: 로그인 페이지로 이동 -->
-    <a href="{{ url_for('login') }}">
-        <button type="button" id="start-btn">시작하기</button>
-    </a>
+        <div class="decoration-flo">
+            <img src="{{ url_for('static', filename='images/flower1.png') }}" alt="">
+            <img src="{{ url_for('static', filename='images/flower2.png') }}" alt="">
+            <img src="{{ url_for('static', filename='images/flower3.png') }}" alt="">
+        </div>
 
-    <!-- 회원가입 버튼 -->
-    <button type="button" id="register-btn" onclick="location.href='/register'">회원가입</button>
 
+        <!-- 시작하기 버튼: 로그인 페이지로 이동 -->
+        <a href="{{ url_for('login') }}">
+            <button type="button" id="start-btn">시작하기</button>
+        </a>
+
+        <!-- 회원가입 버튼 -->
+        <button type="button" id="register-btn" onclick="location.href='/register'">회원가입</button>
+    
     <script>
         const img = document.getElementById('image');
 
