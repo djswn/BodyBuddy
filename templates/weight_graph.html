@@ -77,6 +77,9 @@
             font-weight: bold;
             transition: all 0.3s;
             margin-top: 20px;
+            cursor: pointer;
+            border: none;
+            font-size: 16px;
         }
 
         .back-button:hover {
@@ -118,7 +121,7 @@
         </div>
 
         <div class="button-container">
-            <a href="{{ url_for('login') }}" class="back-button">← 돌아가기</a>
+            <button onclick="history.back()" class="back-button">← 돌아가기</button>
         </div>
     </div>
 
