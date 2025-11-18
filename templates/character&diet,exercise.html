@@ -11,189 +11,172 @@
       display: flex;
       justify-content: center;
       align-items: flex-start;
-      gap: 40px;
+      gap: 80px;
     }
-
-    .left-panel {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .character-img {
-      width: 250px;
-      height: 300px;
-      background-color: #f0f0f0;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      margin-bottom: 20px;
-      overflow: hidden;
-    }
-
-    .character-img img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
-
-    .weight-control {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      font-size: 20px;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-
-    .weight-control button {
-      padding: 6px 12px;
-      font-size: 18px;
-      border: none;
-      border-radius: 4px;
-      background-color: #4CAF50;
-      color: white;
-      cursor: pointer;
-    }
-    .weight-control button:hover {
-      background-color: #45a049;
-    }
-
-    .comment {
-      font-size: 16px;
-      color: #444;
-      margin-top: 5px;
-      margin-bottom: 20px;
-    }
-
-    /* 그래프 버튼 스타일 추가 */
-    .graph-btn {
-      display: inline-block;
-      padding: 12px 30px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      text-decoration: none;
-      border-radius: 50px;
-      font-weight: bold;
-      font-size: 16px;
-      transition: all 0.3s;
-      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-    }
-    .graph-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
-    }
-
-    .right-panel {
-      flex: 1;
-      max-width: 420px;
-    }
-
-    .section {
-      margin-bottom: 20px;
-      padding: 15px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      background-color: #fafafa;
-    }
-
-    .section h3 {
-      margin-top: 0;
-      margin-bottom: 10px;
-      font-size: 18px;
-      color: #333;
-    }
-
-    .section ul {
-      margin: 0;
-      padding-left: 20px;
-    }
-
-    .back-btn {
-      position: fixed;
-      bottom: 10px;
-      left: 10px;
-      width: auto;
-      padding: 8px 16px;
-      background: #888;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      z-index: 9999;
-    }
-    .back-btn:hover {
-      background: #666;
-    }
-
-    .top-bar {
-      position: fixed;
-      top: 10px;
-      right: 10px;
-      z-index: 9999;
-    }
-
-    .info-btn {
-      padding: 8px 16px;
-      background: #667eea;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    .info-btn:hover {
-      background: #764ba2;
-    }
+    .d-day-top {
+    position: fixed;
+    top: 10px;       
+    right: 20px;     
+    font-size: 60px;
+    font-weight: bold;
+    color: #FF5722;
+    z-index: 1000;  
+}
+    .top-bar { position: fixed; top: 10px; left: 10px; }
+    .info-btn { padding: 8px 16px; background: #007BFF; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    .info-btn:hover { background: #0056b3; }
+    .graph-btn { display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; border-radius: 50px; font-weight: bold; font-size: 16px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(91, 97, 123, 0.4);}
+    .graph-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6); }
+    .left-panel { flex: 0 0 300px; margin-top: 60px; }
+    .user-info-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .user-info-table th, .user-info-table td { border: 1px solid #ccc; padding: 6px; text-align: left; }
+    .user-info-table th { background-color: #f0f0f0; width: 40%; }
+    .right-panel { flex: 0 0 500px; display: flex; flex-direction: column; align-items: center; }
+    .character-img { width: 350px; height: 420px; background-color: #f0f0f0; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 10px; overflow: hidden; }
+    .character-img img { width: 100%; height: 100%; object-fit: contain; }
+    .weight-control { display: flex; align-items: center; gap: 30px; font-size: 28px; font-weight: bold; margin-bottom: 20px; }
+    .weight-control button { padding: 12px 20px; font-size: 24px; border: none; border-radius: 6px; background-color: #4CAF50; color: white; cursor: pointer; }
+    .weight-control button:hover { background-color: #45a049; }
+    .comment { font-size: 16px; color: #444; margin-top: 20px; text-align: center; max-width: 500px; line-height: 1.6; }
+    .alarm { margin-top: 20px; font-size: 18px; font-weight: bold; color: #E91E63; }
+    .bottom-bar { position: fixed; bottom: 10px; left: 10px; display: flex; gap: 10px; z-index: 9999; }
+    .back-btn, .commend-btn { padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; color: white; }
+    .back-btn { background: #888; }
+    .back-btn:hover { background: #666; }
+    .commend-btn { background: #FF9800; }
+    .commend-btn:hover { background: #e68900; }
   </style>
 </head>
 <body>
-    <!-- 상단 내 정보 버튼 -->
+  <!-- 좌측 상단 내 정보 버튼 + 그래프 버튼 추가 -->
   <div class="top-bar">
     <a href="{{ url_for('userInfo', user_id=user_id) }}">
       <button class="info-btn">내 정보</button>
     </a>
-  </div>
-
-  <!-- 좌측: 캐릭터 + 체중/증감 + 멘트 -->
-  <div class="left-panel">
-    <div class="character-img">
-      <img src="{{ character_img }}" alt="내 캐릭터">
-    </div>
-
-    <form method="POST" action="{{ url_for('update_weight') }}" class="weight-control">
-      <button type="submit" name="action" value="minus">-</button>
-      <span>{{ weight }} kg</span>
-      <button type="submit" name="action" value="plus">+</button>
-      <input type="hidden" name="weight" value="{{ weight }}">
-      <input type="hidden" name="user_id" value="{{ user_id }}">
-    </form>
-
-    <div class="comment">{{ comment }}</div>
-
     <!-- 그래프 버튼 추가 -->
     <a href="{{ url_for('weight_graph', user_id=user_id) }}" class="graph-btn">
       📊 체중 그래프 보기
     </a>
   </div>
 
-  <!-- 우측: 오늘의 추천 식단 / 오늘의 운동 -->
-  <div class="right-panel">
-    <div class="section">
-      <h3>이렇게 드셔보세요!</h3>
-      <ul>
-        {% for meal, menu in meals.items() %}
-          <li><strong>{{ meal }}</strong>: {{ menu }}</li>
-        {% endfor %}
-      </ul>
-    </div>
+  <!-- 우측 상단 D-Day 표시 -->
+    <div class="d-day-top">{{ d_day_text }}</div>
 
-    <div class="section">
-      <h3>오늘은 이거다!</h3>
-      <p>{{ exercise }}</p>
-    </div>
+  <!-- 좌측: 사용자 정보 표 -->
+  <div class="left-panel">
+    <h3>{{ user_info.name }}님의 정보</h3>
+    <table class="user-info-table">
+      <tr><th>성별</th><td>{{ user_info.gender }}</td></tr>
+      <tr><th>나이</th><td>{{ user_info.age }}</td></tr>
+      <tr><th>신장(cm)</th><td>{{ user_info.height }}</td></tr>
+      <tr><th>체중(kg)</th><td id="weight">{{ user_info.weight }}</td></tr>
+      <tr><th>체지방률(%)</th><td>{{ user_info.body_fat }}</td></tr>
+      <tr><th>BMI</th><td>{{ bmi }}</td></tr>
+      <tr><th>BMR</th><td>{{ bmr }}</td></tr>
+      <tr><th>목표 체중</th><td>{{ user_info.target_weight }}</td></tr>
+      <tr><th>목표 기간(주)</th><td>{{ user_info.diet_period_weeks }}</td></tr>
+    </table>
   </div>
 
-  <!-- 뒤로가기 버튼 -->
-  <button class="back-btn" onclick="history.back()">뒤로가기</button>
+  <!-- 우측: 캐릭터 + D-Day + 체중/증감 + 코멘트 -->
+  <div class="right-panel">
+    <div class="character-img">
+      <img id="character-img" src="{{ character_img }}" alt="내 캐릭터">
+    </div>
+
+    <!-- 체중 증감 버튼: AJAX 버튼으로 변경 -->
+    <div class="weight-control">
+      <button type="button" onclick="updateWeight('minus')">-</button>
+      <span id="weight-display" onclick="enableEdit()">{{ weight }} kg</span>
+      <button type="button" onclick="updateWeight('plus')">+</button>
+    </div>
+
+    <!-- 자동 멘트 -->
+    <div class="comment" id="comment">{{ comment }}</div>
+
+    <!-- D-Day 알람 메시지 -->
+    {% if alarm_message %}
+    <div class="alarm">{{ alarm_message }}</div>
+    {% endif %}
+  </div>
+
+  <!-- 하단: 뒤로가기 + 오늘의 추천 버튼 -->
+  <div class="bottom-bar">
+    <button class="back-btn" onclick="history.back()">뒤로가기</button>
+    <a href="{{ url_for('recommend', user_id=user_id) }}">
+      <button class="commend-btn">오늘의 추천</button>
+    </a>
+  </div>
+
+  <!-- JS: AJAX 요청 -->
+  <script>
+    function updateWeight(action) {
+      const currentWeight = document.getElementById("weight-display").innerText.split(" ")[0];
+      fetch("/update_weight", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `user_id={{ user_id }}&weight=${currentWeight}&action=${action}`
+      })
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById("weight-display").innerText = data.weight + " kg";
+        document.getElementById("weight").innerText = data.weight;
+        document.getElementById("comment").innerText = data.comment;
+        document.getElementById("character-img").src = data.character_img;
+      });
+    }
+
+    function enableEdit() {
+    const span = document.getElementById("weight-display");
+    const currentValue = span.innerText.replace(" kg", "");
+    const input = document.createElement("input");
+    input.type = "number";
+    input.step = "0.1";
+    input.value = currentValue;
+    input.id = "weight-input";
+
+    // 기존 스타일 유지
+    input.style.width = "100px";          // 조금 넉넉하게
+    input.style.fontSize = "28px";        // 기존 글씨 크기
+    input.style.fontWeight = "bold";      // 기존 굵기
+    input.style.textAlign = "center";     // 가운데 정렬
+
+     span.replaceWith(input);
+     input.focus();
+
+    input.addEventListener("blur", () => saveWeight(input.value));
+    input.addEventListener("keydown", (e) => {
+    
+      if (e.key === "Enter") {
+      saveWeight(input.value);
+    }
+  });
+}
+      
+  function saveWeight(newWeight) {
+    fetch("/update_weight", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: `user_id={{ user_id }}&weight=${newWeight}&action=set`
+    })
+    .then(response => response.json())
+    .then(data => {
+      const input = document.getElementById("weight-input");
+      const span = document.createElement("span");
+      span.id = "weight-display";
+      span.innerText = data.weight + " kg";
+      span.onclick = enableEdit;
+      input.replaceWith(span);
+
+      updateDisplay(data.weight, data.comment, data.character_img);
+    });
+  }
+
+  function updateDisplay(weight, comment, character_img) {
+    document.getElementById("weight").innerText = weight;
+    document.getElementById("comment").innerText = comment;
+    document.getElementById("character-img").src = character_img;
+  }
+  </script>
 </body>
 </html>
