@@ -9,12 +9,16 @@ app.secret_key = "your_secret_key"
 
 DATA_FILE = "users.json"
 
+# 기존 데이터 불러오기
 if os.path.exists(DATA_FILE):
     with open(DATA_FILE, "r", encoding="utf-8") as f:
         users = json.load(f)
 else:
     users = {}
 
+# -------------------------------
+# 하루단위 식단/운동 데이터 풀
+# -------------------------------
 MEAL_PLANS = {
     "아침": ["귀리 + 계란", "고구마 100g + 닭가슴살 100g", "삶은 계란 2개 + 바나나 1개", "현미밥 100g + 두부구이"],
     "점심": ["현미밥 150g + 닭가슴살 100g + 채소류 100g", "잡곡밥 + 연어구이 + 샐러드", "곤약밥 + 소고기불고기 + 나물", "현미밥 + 두부조림 + 김치"],
@@ -24,19 +28,19 @@ MEAL_PLANS = {
 
 EXERCISES = ["30분 조깅", "자전거 타기 40분", "홈트 HIIT 20분", "요가 30분", "수영 1시간", "줄넘기 1000개"]
 
-
 def get_daily_meals():
     today = datetime.date.today()
     random.seed(today.toordinal())
     return {meal: random.choice(options) for meal, options in MEAL_PLANS.items()}
-
 
 def get_daily_exercise():
     today = datetime.date.today()
     random.seed(today.toordinal() + 999)
     return random.choice(EXERCISES)
 
-
+# -------------------------------
+# AI 멘트 로직
+# -------------------------------
 def get_health_comment(weight, height, age, gender, bmr, target_weight):
     bmi = calculate_bmi(weight, height)
 
@@ -62,15 +66,27 @@ def get_health_comment(weight, height, age, gender, bmr, target_weight):
 def get_character_image(weight, height, age, gender, bmr):
     bmi = calculate_bmi(weight, height)
 
-    if bmi < 18.5:
-        return url_for('static', filename='images/gonyani.jpeg')
-    elif 18.5 <= bmi < 23:
-        if gender == 'female' and age >= 35 and bmr < 1400:
-            return url_for('static', filename='images/fat_gonyani.png')
+    if gender == 'male':
+        if bmi < 18.5:
+            # 저체중 남성 → 마른 가나디
+            return url_for('static', filename='images/thin_ganadi.png')
+        elif 18.5 <= bmi < 23:
+            # 정상 남성 → 일반 가나디
+            return url_for('static', filename='images/normal.png')
         else:
+            # 과체중/비만 남성 → 뚱뚱한 가나디
+            return url_for('static', filename='images/fat_ganadi.png')
+
+    elif gender == 'female':
+        if bmi < 18.5:
+            # 저체중 여성 → 마른 고냐니
+            return url_for('static', filename='images/underweight_gonyani.png')
+        elif 18.5 <= bmi < 23:
+            # 정상 여성 → 일반 고냐니
             return url_for('static', filename='images/gonyani.jpeg')
-    else:
-        return url_for('static', filename='images/fat_gonyani.png')
+        else:
+            # 과체중/비만 여성 → 뚱뚱한 고냐니
+            return url_for('static', filename='images/fat_gonyani.png')
 
 
 # 새로 추가: 체중 기록 저장 함수
@@ -99,11 +115,12 @@ def save_weight_record(user_id, weight):
     with open(DATA_FILE, "w", encoding="utf-8") as f:
         json.dump(users, f, ensure_ascii=False, indent=2)
 
-
+# -------------------------------
+# 라우트
+# -------------------------------
 @app.route('/')
 def index():
     return render_template('index.html')
-
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -121,6 +138,22 @@ def login():
             bmi = calculate_bmi(user_info['weight'], user_info['height'])
             bmr = calculate_bmr(user_info['weight'], user_info['height'], user_info['age'], gender)
 
+            # D-Day 계산
+            start_date = datetime.datetime.strptime(user_info['start_date'], "%Y-%m-%d").date()
+            total_days = user_info['diet_period_weeks'] * 7
+            elapsed_days = (datetime.date.today() - start_date).days
+            remaining_days = total_days - elapsed_days
+
+            if remaining_days > 0:
+                d_day_text = f"D-{remaining_days}"
+                alarm_message = ""
+            else:
+                d_day_text = "D-Day"
+                if user_info['weight'] <= user_info['target_weight']:
+                    alarm_message = "성공했어요! 끝까지 해내다니 정말 멋있는데요?"
+                else:
+                    alarm_message = "아쉬워요! 다시 목표를 세워볼까요?"
+
             meals = get_daily_meals()
             exercise = get_daily_exercise()
             comment = get_health_comment(user_info['weight'], user_info['height'], user_info['age'], gender, bmr,
@@ -137,13 +170,13 @@ def login():
                 comment=comment,
                 weight=user_info['weight'],
                 user_id=user_id,
-                character_img=character_img
+                character_img=character_img,
+                d_day_text=d_day_text,
+                alarm_message=alarm_message
             )
         else:
             return redirect(url_for('userInfo', user_id=user_id))
-
     return render_template('login.html')
-
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -162,7 +195,6 @@ def register():
 
     return render_template('register.html')
 
-
 @app.route('/userInfo/<user_id>', methods=['GET', 'POST'])
 def userInfo(user_id):
     if request.method == 'POST':
@@ -176,10 +208,10 @@ def userInfo(user_id):
         diet_period_weeks = int(request.form['diet_period'])
 
         user_info = make_user_info(name, age, height, weight, body_fat, target_weight, diet_period_weeks, gender)
-        users[user_id]['info'] = user_info
 
-        # 초기 체중 기록
-        save_weight_record(user_id, weight)
+        # 목표 기간 설정 이후 시작일 기록 (항상 오늘 날짜로 갱신)
+        user_info['start_date'] = datetime.date.today().strftime("%Y-%m-%d")
+        users[user_id]['info'] = user_info
 
         with open(DATA_FILE, "w", encoding="utf-8") as f:
             json.dump(users, f, ensure_ascii=False, indent=2)
@@ -192,6 +224,25 @@ def userInfo(user_id):
         comment = get_health_comment(weight, height, age, gender, bmr, target_weight)
         character_img = get_character_image(weight, height, age, gender, bmr)
 
+        # D-Day 계산
+        start_date = datetime.datetime.strptime(user_info['start_date'], "%Y-%m-%d").date()
+        total_days = diet_period_weeks * 7
+        elapsed_days = (datetime.date.today() - start_date).days
+        remaining_days = total_days - elapsed_days
+
+        if remaining_days > 0:
+            d_day_text = f"D-{remaining_days}"
+            alarm_message = ""
+        else:
+            d_day_text = "D-Day"
+            if weight <= target_weight:
+                alarm_message = "성공했어요! 끝까지 해내다니 정말 멋있는데요?"
+            else:
+                alarm_message = "아쉬워요! 다시 목표를 세워볼까요?"
+
+        # 초기 체중 기록
+        save_weight_record(user_id, weight)
+
         return render_template(
             'character&diet,exercise.html',
             user_info=user_info,
@@ -202,10 +253,31 @@ def userInfo(user_id):
             comment=comment,
             weight=weight,
             user_id=user_id,
-            character_img=character_img
+            character_img=character_img,
+            d_day_text=d_day_text,
+            alarm_message=alarm_message
         )
-    return render_template('userInfo.html', user_id=user_id)
+    else:
+        user_info = users.get(user_id, {}).get('info')
 
+        # start_date는 오늘 날짜로 초기화 
+        if user_info and 'start_date' not in user_info:
+            user_info['start_date'] = datetime.date.today().strftime("%Y-%m-%d")
+            with open(DATA_FILE, "w", encoding="utf-8") as f:
+                json.dump(users, f, ensure_ascii=False, indent=2)
+
+        return render_template('userInfo.html', user_id=user_id, user_info=user_info)
+
+@app.route('/recommend/<user_id>')
+def recommend(user_id):
+    meals = get_daily_meals()
+    exercise = get_daily_exercise()
+    return render_template(
+        'recommend.html',
+        meals=meals,
+        exercise=exercise,
+        user_id=user_id
+    )
 
 @app.route('/update_weight', methods=['POST'])
 def update_weight():
@@ -220,46 +292,35 @@ def update_weight():
         current_weight += 0.5
     elif action == 'minus':
         current_weight -= 0.5
+    elif action == 'set':
+        # 사용자가 직접 입력한 값 반영 (소수점 1자리까지)
+        current_weight = round(current_weight, 1)
 
+    # 사용자 정보 업데이트
     users[user_id]['info']['weight'] = current_weight
-
-    # 체중 변경 시 기록 저장
-    save_weight_record(user_id, current_weight)
-
     with open(DATA_FILE, "w", encoding="utf-8") as f:
         json.dump(users, f, ensure_ascii=False, indent=2)
 
+    # 사용자 정보 업데이트
+    save_weight_record(user_id, current_weight)
+    with open(DATA_FILE, "w", encoding="utf-8") as f:
+        json.dump(users, f, ensure_ascii=False, indent=2)
+
+    # BMI, BMR, 코멘트, 캐릭터 이미지 갱신
     user_info = users[user_id]['info']
     gender = user_info.get('gender', 'male')
-    bmi = calculate_bmi(current_weight, user_info['height'])
     bmr = calculate_bmr(current_weight, user_info['height'], user_info['age'], gender)
-
-    comment = get_health_comment(
-        current_weight,
-        user_info['height'],
-        user_info['age'],
-        gender,
-        bmr,
-        user_info['target_weight']
-    )
+    comment = get_health_comment(current_weight, user_info['height'], user_info['age'], gender, bmr, user_info['target_weight'])
     character_img = get_character_image(current_weight, user_info['height'], user_info['age'], gender, bmr)
-
+    
     meals = get_daily_meals()
     exercise = get_daily_exercise()
 
-    return render_template(
-        'character&diet,exercise.html',
-        user_info=user_info,
-        bmi=bmi,
-        bmr=bmr,
-        meals=meals,
-        exercise=exercise,
-        comment=comment,
-        weight=current_weight,
-        user_id=user_id,
-        character_img=character_img
-    )
-
+    return {
+        "weight": current_weight,
+        "comment": comment,
+        "character_img": character_img
+    }
 
 # 새로 추가: 그래프 페이지
 @app.route('/weight_graph/<user_id>')
@@ -285,6 +346,8 @@ def weight_data(user_id):
         'target_weight': target_weight
     })
 
-
+# -------------------------------
+# 앱 실행
+# -------------------------------
 if __name__ == '__main__':
     app.run(debug=True)
