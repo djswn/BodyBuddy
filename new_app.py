@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from utils.user import make_user_info
 from utils.bmi_bmr import calculate_bmi, calculate_bmr
 import datetime
@@ -85,7 +85,7 @@ def get_character_image(weight, height, age, gender, bmr):
             return url_for('static', filename='images/thin_gonyani.png')
         elif 18.5 <= bmi < 23:
             # 정상 여성 → 일반 고냐니
-            return url_for('static', filename='images/gonyani.jpeg')
+            return url_for('static', filename='images/gonyani.png')
         else:
             # 과체중/비만 여성 → 뚱뚱한 고냐니
             return url_for('static', filename='images/fat_gonyani.png')
@@ -292,6 +292,31 @@ def update_weight():
         "comment": comment,
         "character_img": character_img
     }
+
+# 새로 추가: 그래프 페이지
+@app.route('/weight_graph/<user_id>')
+def weight_graph(user_id):
+    if user_id not in users or not users[user_id].get('info'):
+        return redirect(url_for('login'))
+
+    user_info = users[user_id]['info']
+    return render_template('weight_graph.html', user_id=user_id, user_info=user_info)
+
+
+# 새로 추가: 그래프 데이터 API
+@app.route('/api/weight_data/<user_id>')
+def weight_data(user_id):
+    if user_id not in users:
+        return jsonify({'error': 'User not found'}), 404
+
+    weight_history = users[user_id].get('weight_history', [])
+    target_weight = users[user_id].get('info', {}).get('target_weight', None)
+
+    return jsonify({
+        'history': weight_history,
+        'target_weight': target_weight
+    })
+
 
 # -------------------------------
 # 앱 실행

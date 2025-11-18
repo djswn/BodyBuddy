@@ -1,0 +1,22 @@
+{
+  "djswn": {
+    "password": "djswn",
+    "info": {
+      "name": "차언주",
+      "age": 22,
+      "height": 160.0,
+      "weight": 55.0,
+      "body_fat": 25.0,
+      "target_weight": 48.0,
+      "diet_period_weeks": 24,
+      "gender": "male",
+      "start_date": "2025-11-18"
+    },
+    "weight_history": [
+      {
+        "date": "2025-11-18",
+        "weight": 55.0
+      }
+    ]
+  }
+}
