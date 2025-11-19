@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>오늘의 추천 - BodyBuddy</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 40px;
+    }
+
+    .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 40px;
+      margin-top: 60px;
+      width: 100%;
+  }
+
+    .top-bar {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+    }
+
+    .info-btn {
+      padding: 8px 16px;
+      background: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .info-btn:hover {
+      background: #0056b3;
+    }
+
+    .left-panel {
+      flex: 1;
+      max-width: 500px;
+      min-height: 500px;
+  }
+
+    .right-panel {
+      flex: 1;
+      max-width: 700px;
+      min-height: 700px;
+    }
+
+    .big-section {
+      padding: 20px;
+      font-size: 18px;
+    }
+
+    .section {
+      margin-bottom: 20px;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background-color: #fafafa;
+      min-height: 500px;
+    }
+
+    .section h3 {
+      font-size: 22px;
+      color: #007BFF; /* 파란색 포인트 */
+      border-bottom: 2px solid #ddd;
+      padding-bottom: 5px;
+      margin-bottom: 15px;
+  }
+
+    .section ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .calorie-input {
+      margin-top: 15px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+  }
+
+    .calorie-input input {
+      padding: 10px;
+      border: 2px solid #007BFF;
+      border-radius: 6px;
+      font-size: 16px;
+      width: 150px;
+      transition: 0.3s;
+    }
+
+    .calorie-input input:focus {
+      border-color: #0056b3;
+      outline: none;
+      box-shadow: 0 0 5px rgba(0,123,255,0.5);
+    }
+
+    .calorie-input button {
+      padding: 10px 18px;
+      background: linear-gradient(135deg, #007BFF, #00C6FF);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    .calorie-input button:hover {
+      background: linear-gradient(135deg, #0056b3, #0099cc);
+    }
+
+    #calorie-message {
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 16px;
+    text-align: center;
+  }
+
+    .back-btn {
+      position: fixed;
+      bottom: 10px;
+      left: 10px;
+      width: auto;
+      padding: 8px 16px;
+      background: #888;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      z-index: 9999;
+    }
+
+    .back-btn:hover {
+      background: #666;
+    }
+  </style>
+</head>
+<body>
+  <!-- 상단 내 정보 버튼 -->
+  <div class="top-bar">
+    <a href="{{ url_for('userInfo', user_id=user_id) }}">
+      <button class="info-btn">내 정보</button>
+    </a>
+  </div>
+
+  <div class="container">
+    <!-- 왼쪽: 오늘의 식단 드롭다운 -->
+    <div class="left-panel">
+      <div class="section">
+        <h3>아침🍎</h3>
+        <select id="breakfast" onchange="updateCalories()">
+         <option value="">선택 안함</option>
+          {% for food, cal in foods.items() %}
+            <option value="{{ cal }}">{{ food }} ({{ cal }} kcal)</option>
+          {% endfor %}
+        </select><br><br>
+
+        <h3>점심🥗</h3>
+        <select id="lunch" onchange="updateCalories()">
+          <option value="">선택 안함</option>
+            {% for food, cal in foods.items() %}
+              <option value="{{ cal }}">{{ food }} ({{ cal }} kcal)</option>
+            {% endfor %}
+          </select><br><br>
+
+          <h3>저녁🍚</h3>
+          <select id="dinner" onchange="updateCalories()">
+            <option value="">선택 안함</option>
+            {% for food, cal in foods.items() %}
+              <option value="{{ cal }}">{{ food }} ({{ cal }} kcal)</option>
+            {% endfor %}
+          </select><br><br>
+
+          <h3>간식🍪</h3>
+          <select id="snack" onchange="updateCalories()">
+            <option value="">선택 안함</option>
+            {% for food, cal in foods.items() %}
+              <option value="{{ cal }}">{{ food }} ({{ cal }} kcal)</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <!-- 오른쪽: 권장 칼로리 수치 표시 + 입력 받기-->
+      <div class="right-panel">
+        <div class="section big-section">
+          <h3>{{ user_name }}님의 하루 권장 칼로리😊</h3>
+          <p><strong>{{ recommended_calories }} kcal</strong></p>
+
+          <div class="calorie-input">
+            <label for="my_calories">나의 오늘 칼로리:</label>
+            <input type="number" id="my_calories" placeholder="오늘 섭취 칼로리 입력">
+            <button onclick="checkCalories()">확인</button>
+          </div>
+
+          <p id="calorie-message" style="margin-top:10px; font-weight:bold;"></p>
+
+          <div class="progress-section">
+            <h3>지금 진행상태는?</h3>
+            <p id="progress-value"
+              style="font-size: 32px; font-weight: bold; text-align: center;
+              {% if progress >= 81 %} color: green;
+              {% elif progress >= 61 %} color: limegreen;
+              {% elif progress >= 41 %} color: orange;
+              {% elif progress >= 21 %} color: orangered;
+              {% else %} color: red; {% endif %}">
+              {{ progress }}%
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <script>
+      function updateCalories() {
+        const breakfast = parseInt(document.getElementById("breakfast").value) || 0;
+        const lunch = parseInt(document.getElementById("lunch").value) || 0;
+        const dinner = parseInt(document.getElementById("dinner").value) || 0;
+        const snack = parseInt(document.getElementById("snack").value) || 0;
+
+        const total = breakfast + lunch + dinner + snack;
+        const recommended = {{ recommended_calories }};
+        const messageEl = document.getElementById("calorie-message");
+
+        messageEl.textContent = "오늘 선택한 음식 칼로리: " + total + " kcal";
+
+        const diff = total - recommended;
+        if (diff > 200) {
+          messageEl.textContent += " → 권장량보다 너무 많아요!";
+          messageEl.style.color = "red";
+        } else if (diff < -200) {
+          messageEl.textContent += " → 권장량보다 너무 적어요!";
+          messageEl.style.color = "orange";
+        } else {
+          messageEl.textContent += " → 적절합니다!";
+          messageEl.style.color = "green";
+        }
+      }
+      </script>
+    
+      <script>
+      function checkCalories() {
+        const myCalories = parseInt(document.getElementById("my_calories").value);
+        const recommended = {{ recommended_calories }};
+        const messageEl = document.getElementById("calorie-message");
+
+        if (isNaN(myCalories)) {
+          messageEl.textContent = "칼로리를 입력해주세요!";
+          messageEl.style.color = "red";
+          return;
+      }
+
+      const diff = myCalories - recommended;
+
+      if (diff > 200) {
+        messageEl.textContent = "큰일나! 오늘처럼 섭취하면 안돼!";
+        messageEl.style.color = "red";
+        messageEl.style.backgroundColor = "#ffe5e5";
+      } else if (diff < -200) {
+        messageEl.textContent = "섭취한 칼로리가 너무 적어.. 내일은 다시 잘해보자!";
+        messageEl.style.color = "orange";
+        messageEl.style.backgroundColor = "#fff3cd";
+      } else {
+        messageEl.textContent = "잘했어! 내일도 오늘처럼만 꾸준하게 하자구!";
+        messageEl.style.color = "green";
+        messageEl.style.backgroundColor = "#d4edda";
+      }
+  }
+    </script>
+    </div>
+  </div>
+
+  <!-- 뒤로가기 버튼 -->
+  <button class="back-btn" onclick="history.back()">뒤로가기</button>
+</body>
+</html>
