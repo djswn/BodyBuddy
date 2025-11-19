@@ -16,27 +16,14 @@ if os.path.exists(DATA_FILE):
 else:
     users = {}
 
-# -------------------------------
-# 하루단위 식단/운동 데이터 풀
-# -------------------------------
-MEAL_PLANS = {
-    "아침": ["귀리 + 계란", "고구마 100g + 닭가슴살 100g", "삶은 계란 2개 + 바나나 1개", "현미밥 100g + 두부구이"],
-    "점심": ["현미밥 150g + 닭가슴살 100g + 채소류 100g", "잡곡밥 + 연어구이 + 샐러드", "곤약밥 + 소고기불고기 + 나물", "현미밥 + 두부조림 + 김치"],
-    "저녁": ["샐러드 + 연어", "고구마 100g + 닭가슴살 100g", "두부스테이크 + 채소볶음", "현미밥 + 계란말이 + 나물"],
-    "간식": ["고구마 50g", "삶은 계란 1개", "그릭요거트 + 견과류", "바나나 1개"]
+# 드롭다운 음식 메뉴 (추가할 부분은 여기에)
+FOODS = {
+    "사과 1개": 200,
+    "삶은 계란 1개": 250,
+    "고구마 100g": 180,
+    "바나나 1개": 150,
+    "현미밥 100g": 130
 }
-
-EXERCISES = ["30분 조깅", "자전거 타기 40분", "홈트 HIIT 20분", "요가 30분", "수영 1시간", "줄넘기 1000개"]
-
-def get_daily_meals():
-    today = datetime.date.today()
-    random.seed(today.toordinal())
-    return {meal: random.choice(options) for meal, options in MEAL_PLANS.items()}
-
-def get_daily_exercise():
-    today = datetime.date.today()
-    random.seed(today.toordinal() + 999)
-    return random.choice(EXERCISES)
 
 # -------------------------------
 # AI 멘트 로직
@@ -88,6 +75,41 @@ def get_character_image(weight, height, age, gender, bmr):
             # 과체중/비만 여성 → 뚱뚱한 고냐니
             return url_for('static', filename='images/fat_gonyani.png')
 
+# 권장 칼로리 계산 함수: BMR * 활동 수준 계수(운동량에 따라 5단계로 나눔)
+
+ACTIVITY_LEVELS = {
+    "low": 1.2,
+    "light": 1.375,
+    "moderate": 1.55,
+    "high": 1.725,
+    "very_high": 1.9
+}
+
+def calculate_recommended_calories(weight, height, age, gender, activity_key="moderate"):
+    bmr = calculate_bmr(weight, height, age, gender)
+    activity_factor = ACTIVITY_LEVELS.get(activity_key, 1.55)  # 기본값: 보통 활동
+    
+    return round(bmr * activity_factor)
+
+# -------------------------------
+# 성취도 계산 함수
+# -------------------------------
+def calculate_progress(start_weight, current_weight, target_weight):
+    if target_weight < start_weight:  # 감량 목표
+        total_change = start_weight - target_weight
+        current_change = start_weight - current_weight
+    else:  # 증량 목표
+        total_change = target_weight - start_weight
+        current_change = current_weight - start_weight
+
+    if total_change == 0:
+        return 0
+    if current_change < 0:
+        return 0
+
+    progress = float((current_change / total_change) * 100)
+    return min(progress, 100)
+
 
 # 새로 추가: 체중 기록 저장 함수
 def save_weight_record(user_id, weight):
@@ -130,7 +152,8 @@ def login():
 
         user = users.get(user_id)
         if not user or user['password'] != password:
-            return "아이디 또는 비밀번호가 잘못되었습니다."
+            # 로그인 실패
+            return render_template('login.html', error="아이디 또는 비밀번호가 잘못되었습니다.")
 
         if user['info']:
             user_info = user['info']
@@ -154,8 +177,6 @@ def login():
                 else:
                     alarm_message = "아쉬워요! 다시 목표를 세워볼까요?"
 
-            meals = get_daily_meals()
-            exercise = get_daily_exercise()
             comment = get_health_comment(user_info['weight'], user_info['height'], user_info['age'], gender, bmr,
                                          user_info['target_weight'])
             character_img = get_character_image(user_info['weight'], user_info['height'], user_info['age'], gender, bmr)
@@ -165,8 +186,6 @@ def login():
                 user_info=user_info,
                 bmi=bmi,
                 bmr=bmr,
-                meals=meals,
-                exercise=exercise,
                 comment=comment,
                 weight=user_info['weight'],
                 user_id=user_id,
@@ -204,10 +223,14 @@ def userInfo(user_id):
         height = float(request.form['height'])
         weight = float(request.form['weight'])
         body_fat = float(request.form.get('body_fat', 0))
+        start_weight = float(request.form.get('start_weight', weight))
         target_weight = float(request.form['target_weight'])
         diet_period_weeks = int(request.form['diet_period'])
+        activity_level = request.form['activity_level']
 
         user_info = make_user_info(name, age, height, weight, body_fat, target_weight, diet_period_weeks, gender)
+        user_info['start_weight'] = start_weight
+        user_info['activity_level'] = request.form.get('activity_level', 'moderate')
 
         # 목표 기간 설정 이후 시작일 기록 (항상 오늘 날짜로 갱신)
         user_info['start_date'] = datetime.date.today().strftime("%Y-%m-%d")
@@ -219,8 +242,6 @@ def userInfo(user_id):
         bmi = calculate_bmi(weight, height)
         bmr = calculate_bmr(weight, height, age, gender)
 
-        meals = get_daily_meals()
-        exercise = get_daily_exercise()
         comment = get_health_comment(weight, height, age, gender, bmr, target_weight)
         character_img = get_character_image(weight, height, age, gender, bmr)
 
@@ -248,8 +269,6 @@ def userInfo(user_id):
             user_info=user_info,
             bmi=bmi,
             bmr=bmr,
-            meals=meals,
-            exercise=exercise,
             comment=comment,
             weight=weight,
             user_id=user_id,
@@ -270,13 +289,26 @@ def userInfo(user_id):
 
 @app.route('/recommend/<user_id>')
 def recommend(user_id):
-    meals = get_daily_meals()
-    exercise = get_daily_exercise()
+    user_info = users[user_id]['info']
+
+    recommended_calories = calculate_recommended_calories(
+        user_info['weight'],
+        user_info['height'],
+        user_info['age'],
+        user_info['gender'],
+        user_info.get('activity_level', 'moderate')
+    )
+
+    start_weight = user_info.get('start_weight', user_info['weight'])
+    progress = calculate_progress(start_weight, user_info['weight'], user_info['target_weight'])
+
     return render_template(
         'recommend.html',
-        meals=meals,
-        exercise=exercise,
-        user_id=user_id
+        foods=FOODS,   
+        user_id=user_id,
+        user_name=user_info['name'],
+        recommended_calories=recommended_calories,
+        progress=progress
     )
 
 @app.route('/update_weight', methods=['POST'])
@@ -296,7 +328,7 @@ def update_weight():
         # 사용자가 직접 입력한 값 반영 (소수점 1자리까지)
         current_weight = round(current_weight, 1)
 
-    # 사용자 정보 업데이트
+    # 사용자 체중 변경 업데이트
     users[user_id]['info']['weight'] = current_weight
     with open(DATA_FILE, "w", encoding="utf-8") as f:
         json.dump(users, f, ensure_ascii=False, indent=2)
@@ -312,14 +344,16 @@ def update_weight():
     bmr = calculate_bmr(current_weight, user_info['height'], user_info['age'], gender)
     comment = get_health_comment(current_weight, user_info['height'], user_info['age'], gender, bmr, user_info['target_weight'])
     character_img = get_character_image(current_weight, user_info['height'], user_info['age'], gender, bmr)
-    
-    meals = get_daily_meals()
-    exercise = get_daily_exercise()
+
+    # 성취도 계산 추가
+    start_weight = user_info.get('start_weight', current_weight)
+    progress = calculate_progress(start_weight, current_weight, user_info['target_weight'])
 
     return {
         "weight": current_weight,
         "comment": comment,
-        "character_img": character_img
+        "character_img": character_img,
+        "progress": progress
     }
 
 # 새로 추가: 그래프 페이지
