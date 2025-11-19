@@ -1,0 +1,41 @@
+<!-- 오른쪽: 권장 칼로리 수치 표시 + 입력 받기-->
+      <div class="right-panel">
+        <div class="section big-section">
+          <h3>{{ user_name }}님의 하루 권장 칼로리😊</h3>
+          <p><strong>{{ recommended_calories }} kcal</strong></p>
+
+          <div class="calorie-input">
+            <label for="my_calories">나의 오늘 칼로리:</label>
+            <input type="number" id="my_calories" placeholder="오늘 섭취 칼로리 입력">
+            <button onclick="checkCalories()">확인</button>
+          </div>
+          ============================================================
+<script>
+      function checkCalories() {
+        const myCalories = parseInt(document.getElementById("my_calories").value);
+        const recommended = {{ recommended_calories }};
+        const messageEl = document.getElementById("calorie-message");
+
+        if (isNaN(myCalories)) {
+          messageEl.textContent = "칼로리를 입력해주세요!";
+          messageEl.style.color = "red";
+          return;
+      }
+
+      const diff = myCalories - recommended;
+
+      if (diff > 200) {
+        messageEl.textContent = "큰일나! 오늘처럼 섭취하면 안돼!";
+        messageEl.style.color = "red";
+        messageEl.style.backgroundColor = "#ffe5e5";
+      } else if (diff < -200) {
+        messageEl.textContent = "섭취한 칼로리가 너무 적어.. 내일은 다시 잘해보자!";
+        messageEl.style.color = "orange";
+        messageEl.style.backgroundColor = "#fff3cd";
+      } else {
+        messageEl.textContent = "잘했어! 내일도 오늘처럼만 꾸준하게 하자구!";
+        messageEl.style.color = "green";
+        messageEl.style.backgroundColor = "#d4edda";
+      }
+  }
+    </script>
