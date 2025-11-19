@@ -9,8 +9,52 @@
             <input type="number" id="my_calories" placeholder="오늘 섭취 칼로리 입력">
             <button onclick="checkCalories()">확인</button>
           </div>
-          ============================================================
-<script>
+
+          <p id="calorie-message" style="margin-top:10px; font-weight:bold;"></p>
+
+          <div class="progress-section">
+            <h3>지금 진행상태는?</h3>
+            <p id="progress-value"
+              style="font-size: 32px; font-weight: bold; text-align: center;
+              {% if progress >= 81 %} color: green;
+              {% elif progress >= 61 %} color: limegreen;
+              {% elif progress >= 41 %} color: orange;
+              {% elif progress >= 21 %} color: orangered;
+              {% else %} color: red; {% endif %}">
+              {{ progress }}%
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <script>
+      function updateCalories() {
+        const breakfast = parseInt(document.getElementById("breakfast").value) || 0;
+        const lunch = parseInt(document.getElementById("lunch").value) || 0;
+        const dinner = parseInt(document.getElementById("dinner").value) || 0;
+        const snack = parseInt(document.getElementById("snack").value) || 0;
+
+        const total = breakfast + lunch + dinner + snack;
+        const recommended = {{ recommended_calories }};
+        const messageEl = document.getElementById("calorie-message");
+
+        messageEl.textContent = "오늘 선택한 음식 칼로리: " + total + " kcal";
+
+        const diff = total - recommended;
+        if (diff > 200) {
+          messageEl.textContent += " → 권장량보다 너무 많아요!";
+          messageEl.style.color = "red";
+        } else if (diff < -200) {
+          messageEl.textContent += " → 권장량보다 너무 적어요!";
+          messageEl.style.color = "orange";
+        } else {
+          messageEl.textContent += " → 적절합니다!";
+          messageEl.style.color = "green";
+        }
+      }
+      </script>
+    
+      <script>
       function checkCalories() {
         const myCalories = parseInt(document.getElementById("my_calories").value);
         const recommended = {{ recommended_calories }};
@@ -39,3 +83,5 @@
       }
   }
     </script>
+    </div>
+  </div>
