@@ -57,6 +57,7 @@
     <a href="{{ url_for('weight_graph', user_id=user_id) }}" class="graph-btn">
       📊 체중 그래프 보기
     </a>
+    <button class="info-btn" onclick="confirmLogout()" style="background: #dc3545; margin-left: 10px;">로그아웃</button>
   </div>
 
   <!-- 우측 상단 D-Day 표시 -->
@@ -176,6 +177,11 @@
     document.getElementById("weight").innerText = weight;
     document.getElementById("comment").innerText = comment;
     document.getElementById("character-img").src = character_img;
+  }
+  function confirmLogout() {
+    if (confirm('정말 로그아웃 하시겠습니까?')) {
+      window.location.href = "{{ url_for('logout') }}";
+    }
   }
   </script>
 </body>
