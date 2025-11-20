@@ -12,7 +12,7 @@ pip install flask
 git clone https://github.com/djswn/BodyBuddy.git
 cd bodyBuddy
 python app.py
-실행 후 접속 http://127.0.0.1:5000
+http://127.0.0.1:5000 접속
 ## 주요 기능
 1. 회원가입, 로그인 기능
 2. 사용자 정보 기록
