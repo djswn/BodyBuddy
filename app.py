@@ -380,6 +380,11 @@ def weight_data(user_id):
         'target_weight': target_weight
     })
 
+@app.route('/logout')
+def logout():
+    session.clear()  # 세션 전체 초기화
+    return redirect(url_for('index'))
+
 # -------------------------------
 # 앱 실행
 # -------------------------------
