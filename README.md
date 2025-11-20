@@ -20,3 +20,5 @@ python app.py
 4. AI 멘트
 5. 추천 식단, 추천 운동 제시
 6. 캐릭터 화면
+## CONTACT
+cej0836@naver.com
