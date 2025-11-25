@@ -58,10 +58,6 @@
   </select>
 </label><br>
 
-  <label>체지방률(%):
-    <input type="number" name="body_fat" step="0.1" value="{{ user_info.body_fat if user_info else '' }}">
-  </label><br>
-
   <label>시작 체중(kg):
   <input type="number" name="start_weight" step="0.1"
          value="{{ user_info.start_weight if user_info else '' }}" required>
