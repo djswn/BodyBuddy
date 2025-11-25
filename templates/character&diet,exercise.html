@@ -72,12 +72,11 @@
     
   </div>
 
-  
 
   <!-- 하단: 뒤로가기 + 오늘의 추천 버튼 -->
   <div class="bottom-bar">
     <!-- 자동 멘트 -->
-    <div class="comment">{{ comment }}</div>
+    <div id="comment" class="comment">{{ comment }}</div>  <!-- id 추가 -->
     <!-- D-Day 알람 메시지 -->
     {% if alarm_message %}
     <div class="alarm">{{ alarm_message }}</div>
@@ -98,7 +97,7 @@
         document.getElementById("weight-display").innerText = data.weight + " kg";
         document.getElementById("weight").innerText = data.weight;
         document.getElementById("comment").innerText = data.comment;
-        document.getElementById("character-img").src = data.character_img;
+        document.getElementById("character-img").src = data.character_img + "?t=" + new Date().getTime();  // 캐시 무력화
       });
     }
 
@@ -151,7 +150,7 @@
   function updateDisplay(weight, comment, character_img) {
     document.getElementById("weight").innerText = weight;
     document.getElementById("comment").innerText = comment;
-    document.getElementById("character-img").src = character_img;
+    document.getElementById("character-img").src = character_img + "?t=" + new Date().getTime();  // 캐시 무력화
   }
 
   document.getElementById("info-table-btn").addEventListener("click", function() {
