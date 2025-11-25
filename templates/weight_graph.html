@@ -14,7 +14,7 @@
 
         body {
             font-family: 'Noto Sans KR', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #FFEE9B 0%, #FFD966 100%);
             min-height: 100vh;
             padding: 20px;
         }
@@ -30,7 +30,7 @@
 
         h1 {
             text-align: center;
-            color: #667eea;
+            color: #E6C300;
             margin-bottom: 30px;
             font-size: 2.5em;
         }
@@ -49,17 +49,17 @@
         }
 
         .stat-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #FFEE9B 0%, #FFD966 100%);
             padding: 20px;
             border-radius: 15px;
-            color: white;
+            color: #333;
             text-align: center;
         }
 
         .stat-card h3 {
             font-size: 0.9em;
             margin-bottom: 10px;
-            opacity: 0.9;
+            opacity: 0.8;
         }
 
         .stat-card p {
@@ -70,8 +70,8 @@
         .back-button {
             display: inline-block;
             padding: 15px 40px;
-            background: #667eea;
-            color: white;
+            background: #FFEE9B;
+            color: #333;
             text-decoration: none;
             border-radius: 50px;
             font-weight: bold;
@@ -83,7 +83,7 @@
         }
 
         .back-button:hover {
-            background: #764ba2;
+            background: #FFD966;
             transform: translateY(-2px);
             box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
@@ -173,20 +173,20 @@
                         datasets: [{
                             label: '체중 (kg)',
                             data: weights,
-                            borderColor: '#667eea',
-                            backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                            borderColor: '#E6C300',
+                            backgroundColor: 'rgba(255, 238, 155, 0.3)',
                             tension: 0.4,
                             fill: true,
                             pointRadius: 5,
                             pointHoverRadius: 7,
-                            pointBackgroundColor: '#667eea',
+                            pointBackgroundColor: '#E6C300',
                             pointBorderColor: '#fff',
                             pointBorderWidth: 2
                         },
                         ...(targetWeight ? [{
                             label: '목표 체중',
                             data: Array(dates.length).fill(targetWeight),
-                            borderColor: '#f093fb',
+                            borderColor: '#FFD966',
                             borderDash: [5, 5],
                             borderWidth: 2,
                             fill: false,
