@@ -11,7 +11,8 @@
 <body>
   <div class="container">
       <h1>.・。.・゜✭・<span class="title">inFoRmatiOn</span>・✫・゜・。.</h1>
-      <a id="back" href="{{ url_for('index') }}">x</a>
+      <!-- X 버튼에 onclick 추가, href 제거 -->
+      <a id="back" href="javascript:void(0);" onclick="history.back()">x</a>
 
       <!-- user_id를 url_for에 전달 -->
       <form action="{{ url_for('userInfo', user_id=user_id) }}" method="post">
@@ -63,7 +64,6 @@
          value="{{ user_info.start_weight if user_info else '' }}" required>
   </label><br>
 
-
   <label>목표 체중(kg):
     <input type="number" name="target_weight" step="0.1" value="{{ user_info.target_weight if user_info else '' }}" required>
   </label><br>
@@ -75,8 +75,6 @@
   <button type="submit">submit !!</button>
 </form>
 
-    <!-- 뒤로가기 버튼-->
-    <button class="back-btn" onclick="history.back()">뒤로가기</button>
   </div>
 </body>
 </html>
