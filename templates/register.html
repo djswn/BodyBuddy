@@ -25,5 +25,12 @@
     </form>
     <a id="login" href="{{ url_for('login') }}">이미 계정이 있으신가요? 로그인</a>
   </div>
-  </body>
+
+  <!-- 오류 경고창 -->
+  {% if error %}
+  <script>
+      alert("{{ error }}");
+  </script>
+  {% endif %}
+</body>
 </html>
