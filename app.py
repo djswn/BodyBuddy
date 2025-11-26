@@ -198,18 +198,13 @@ def login():
     return render_template('login.html')
 
 @app.route('/register', methods=['GET', 'POST'])
-@app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
         user_id = request.form['user_id']
         password = request.form['password']
 
-        # 비밀번호 길이 체크
-        if len(password) >= 8:
-            return render_template('register.html', error="비밀번호는 반드시 8자리 이하여야 합니다.")
-
         if user_id in users:
-            return render_template('register.html', error="이미 존재하는 아이디입니다.")
+            return "이미 존재하는 아이디입니다."
 
         users[user_id] = {"password": password, "info": None, "weight_history": []}
         with open(DATA_FILE, "w", encoding="utf-8") as f:
