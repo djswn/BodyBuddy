@@ -21,12 +21,11 @@
     <a href="{{ url_for('weight_graph', user_id=user_id) }}">
       <img src="{{ url_for('static', filename='images/graph.png') }}" alt="그래프" width="80px">
     </a>
-    <button class="back-btn" onclick="history.back()">뒤로가기</button>
 
   </div>
 
   <!-- 우측 상단 D-Day표시 -->
-  <div class="top-right-bar">  
+  <div class="top-right-bar">
     <div id="d-day-top">{{ d_day_text }}</div>
     <button onclick="confirmLogout()">로그아웃</button>
   </div>
@@ -69,7 +68,7 @@
       <button type="button" onclick="updateWeight('plus')">+</button>
     </div>
 
-    
+
   </div>
 
 
@@ -121,13 +120,13 @@
 
       input.addEventListener("blur", () => saveWeight(input.value));
       input.addEventListener("keydown", (e) => {
-      
+
         if (e.key === "Enter") {
         saveWeight(input.value);
         }
       });
     }
-      
+
   function saveWeight(newWeight) {
     fetch("/update_weight", {
       method: "POST",
