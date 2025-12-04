@@ -37,12 +37,18 @@
     font-weight: 100;
 }
 
+/* 폼 전체 정렬 */
+form {
+    width: 100%;
+}
+
 /* 라벨 & 입력박스 */
 label {
     display: block;
     font-weight: bold;
     color: #444;
     margin: 8px 0;
+    width: 100%;
 }
 
 input[type="text"],
@@ -51,9 +57,18 @@ select {
     width: 100%;
     padding: 10px 12px;
     border: 2px solid #ccc;
-    font-size: 14px;
+    font-size: 16px;  /* 14px → 16px로 변경 */
     box-sizing: border-box;
     transition: border 0.2s;
+    margin-bottom: 10px;
+    height: 45px;  /* 높이 추가 */
+}
+
+/* select 박스 특별 스타일 추가 */
+select {
+    font-size: 15px;  /* select는 조금 더 작게 */
+    height: 48px;  /* select는 높이를 더 크게 */
+    cursor: pointer;
 }
 
 input:focus, select:focus {
@@ -63,7 +78,7 @@ input:focus, select:focus {
 
 /* 제출 버튼 */
 button {
-    width: 30%;
+    width: 100%;
     background-color: rgb(149, 149, 149);
     color: white;
     margin: 20px 0;
