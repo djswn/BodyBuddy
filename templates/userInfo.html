@@ -42,19 +42,19 @@
   <label>운동량:
   <select name="activity_level" required>
     <option value="low" {% if user_info and user_info.activity_level == 'low' %}selected{% endif %}>
-      거의 운동 안 함 (활동 계수 1.2)
+      거의 운동 안 함
     </option>
     <option value="light" {% if user_info and user_info.activity_level == 'light' %}selected{% endif %}>
-      가벼운 활동 (주 1~3회 가벼운 운동, 1.375)
+      가벼운 활동 (주 1~3회 운동)
     </option>
     <option value="moderate" {% if user_info and user_info.activity_level == 'moderate' %}selected{% endif %}>
-      보통 활동 (주 3~5회 중간 강도의 운동, 1.55)
+      보통 활동 (주 3~5회 운동)
     </option>
     <option value="high" {% if user_info and user_info.activity_level == 'high' %}selected{% endif %}>
-      높은 활동 (주 6~7회 강도 높은 운동, 1.725)
+      높은 활동 (주 6~7회 운동)
     </option>
     <option value="very_high" {% if user_info and user_info.activity_level == 'very_high' %}selected{% endif %}>
-      매우 높은 활동 (매일 강도 높은 운동 + 육체 노동, 1.9)
+      매우 높은 활동 (매일 강도 높은 운동)
     </option>
   </select>
 </label><br>
