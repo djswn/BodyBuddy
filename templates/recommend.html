@@ -8,77 +8,85 @@
 
 <body>
 
-  <h2 class="title">{{ user_name }}님의 식단 구성하기 🍱</h2>
-  <p class="subtitle">권장 칼로리: <strong>{{ recommended_calories }} kcal</strong></p>
+  <!-- 전체 페이지 감싸는 컨테이너 -->
+  <div class="meal-wrapper">
+    <h1 class="title-with-images">
+      <img src="{{ url_for('static', filename='images/ganadi_Pic.png') }}" class="title-img left-img">
+      <p>! {{ user_name }}님의 식단표 !</p>
+      <img src="{{ url_for('static', filename='images/gonyani_Pic.png') }}" class="title-img right-img">
+    </h1>
 
-  <div class="container">
+    <p class="subtitle">왼쪽의 음식 리스트에서 오늘 먹을 음식을 오른쪽의 식단표에 가져와서 스스로 식단표를 만들어봐 ~<br>
+      권장 칼로리: <strong>{{ recommended_calories }} kcal</strong></p>
 
-    <!-- ===============================
-         왼쪽 음식 리스트 (카테고리 + 검색 가능)
-    ================================ -->
-    <div class="food-list">
+    <div class="container">
 
-      <h3>🍙 음식 리스트</h3>
+      <!-- ===============================
+           왼쪽 음식 리스트
+      ================================ -->
+      <div class="food-list">
+        <h3>🍙 음식 리스트</h3>
+        <p>음식 검색하기</p>
 
-      <!-- 검색창 -->
-      <input
-        type="text"
-        id="searchFood"
-        placeholder="음식 검색..."
-        onkeyup="filterFoods()"
-        class="search-input"
-      >
+        <input
+          type="text"
+          id="searchFood"
+          placeholder="오늘은 어떤 걸 먹을거야?"
+          onkeyup="filterFoods()"
+          class="search-input"
+        >
 
-      <!-- 카테고리별 음식 목록 -->
-      <div id="foodContainer">
-        {% for category, items in foods.items() %}
-          <h4 class="category-title">{{ category }}</h4>
+        <div id="foodContainer">
+          {% for category, items in foods.items() %}
+            <h4 class="category-title">{{ category }}</h4>
 
-          {% for food, cal in items.items() %}
-            <div class="food-item"
-                 draggable="true"
-                 data-food="{{ food }}"
-                 data-cal="{{ cal }}">
-              {{ food }} ({{ cal }} kcal)
-            </div>
+            {% for food, cal in items.items() %}
+              <div class="food-item"
+                   draggable="true"
+                   data-food="{{ food }}"
+                   data-cal="{{ cal }}">
+                {{ food }} ({{ cal }} kcal)
+              </div>
+            {% endfor %}
           {% endfor %}
-        {% endfor %}
+        </div>
+      </div>
+
+
+      <!-- ===============================
+           오른쪽 식단 드롭존
+      ================================ -->
+      <div class="meal-area">
+
+        <div class="meal-box" ondragover="allowDrop(event)" ondrop="dropFood(event, 'breakfast')">
+          <h3>아침 🍎</h3>
+          <div id="breakfast"></div>
+        </div>
+
+        <div class="meal-box" ondragover="allowDrop(event)" ondrop="dropFood(event, 'lunch')">
+          <h3>점심 🥗</h3>
+          <div id="lunch"></div>
+        </div>
+
+        <div class="meal-box" ondragover="allowDrop(event)" ondrop="dropFood(event, 'dinner')">
+          <h3>저녁 🍚</h3>
+          <div id="dinner"></div>
+        </div>
+
+        <div class="meal-box" ondragover="allowDrop(event)" ondrop="dropFood(event, 'snack')">
+          <h3>간식 🍪</h3>
+          <div id="snack"></div>
+        </div>
+
+        <p id="total-cal" class="total-calorie">총 섭취 예정 칼로리: 0 kcal</p>
+        <p id="calorie-message" class="calorie-message"></p>
+
       </div>
     </div>
 
+    <button class="back-btn" onclick="history.back()">뒤로가기</button>
 
-    <!-- ===============================
-         오른쪽 식단 드롭존
-    ================================ -->
-    <div class="meal-area">
-
-      <div class="meal-box" ondragover="allowDrop(event)" ondrop="dropFood(event, 'breakfast')">
-        <h3>아침 🍎</h3>
-        <div id="breakfast"></div>
-      </div>
-
-      <div class="meal-box" ondragover="allowDrop(event)" ondrop="dropFood(event, 'lunch')">
-        <h3>점심 🥗</h3>
-        <div id="lunch"></div>
-      </div>
-
-      <div class="meal-box" ondragover="allowDrop(event)" ondrop="dropFood(event, 'dinner')">
-        <h3>저녁 🍚</h3>
-        <div id="dinner"></div>
-      </div>
-
-      <div class="meal-box" ondragover="allowDrop(event)" ondrop="dropFood(event, 'snack')">
-        <h3>간식 🍪</h3>
-        <div id="snack"></div>
-      </div>
-
-      <p id="total-cal" class="total-calorie">총 섭취 예정 칼로리: 0 kcal</p>
-      <p id="calorie-message" class="calorie-message"></p>
-
-    </div>
-  </div>
-
-  <button class="back-btn" onclick="history.back()">뒤로가기</button>
+  </div> <!-- meal-wrapper END -->
 
 
   <!-- ===============================
@@ -87,7 +95,9 @@
   <script>
     let draggedFood = null;
 
-    // 드래그 시작
+    /* ------------------------------
+       드래그 시작
+    ------------------------------ */
     document.querySelectorAll(".food-item").forEach(item => {
       item.addEventListener("dragstart", e => {
         draggedFood = {
@@ -97,12 +107,13 @@
       });
     });
 
-    // 드랍 허용
     function allowDrop(event) {
       event.preventDefault();
     }
 
-    // 드랍 처리 + 삭제 버튼 기능 포함
+    /* ------------------------------
+       음식 드롭 처리
+    ------------------------------ */
     function dropFood(event, mealType) {
       event.preventDefault();
       if (!draggedFood) return;
@@ -118,15 +129,21 @@
 
       target.appendChild(div);
       updateTotalCalories();
+      saveMeals();  
     }
 
-    // 음식 삭제
+    /* ------------------------------
+       음식 삭제
+    ------------------------------ */
     function deleteFood(btn) {
       btn.parentElement.remove();
       updateTotalCalories();
+      saveMeals();  
     }
 
-    // 전체 칼로리 계산
+    /* ------------------------------
+       전체 칼로리 계산
+    ------------------------------ */
     function updateTotalCalories() {
       let total = 0;
 
@@ -158,22 +175,103 @@
       }
     }
 
+    /* ------------------------------
+       ⭐ 하루 단위 식단 저장 기능
+    ------------------------------ */
 
-    /* =============================
+    function saveMeals() {
+      const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+
+      const meals = {
+        date: today,
+        breakfast: getMealItems("breakfast"),
+        lunch: getMealItems("lunch"),
+        dinner: getMealItems("dinner"),
+        snack: getMealItems("snack"),
+      };
+
+      localStorage.setItem("bodybuddy_meals", JSON.stringify(meals));
+    }
+
+    // 개별 식단의 음식 리스트 추출
+    function getMealItems(mealId) {
+      const items = document.getElementById(mealId).children;
+      const list = [];
+
+      for (let item of items) {
+        const match = item.textContent.match(/(.+?) \((\d+) kcal\)/);
+        if (match) {
+          list.push({
+            name: match[1].trim(),
+            cal: parseInt(match[2])
+          });
+        }
+      }
+      return list;
+    }
+
+    /* ------------------------------
+      저장된 식단 불러오기
+    ------------------------------ */
+    function loadMeals() {
+      const data = localStorage.getItem("bodybuddy_meals");
+      if (!data) return;
+
+      const saved = JSON.parse(data);
+      const today = new Date().toISOString().split("T")[0];
+
+      // 날짜 다르면 초기화
+      if (saved.date !== today) {
+        localStorage.removeItem("bodybuddy_meals");
+        return;
+      }
+
+      // 복구
+      restoreMeal("breakfast", saved.breakfast);
+      restoreMeal("lunch", saved.lunch);
+      restoreMeal("dinner", saved.dinner);
+      restoreMeal("snack", saved.snack);
+
+      updateTotalCalories();
+    }
+
+    function restoreMeal(mealId, items) {
+      const target = document.getElementById(mealId);
+      target.innerHTML = "";
+
+      items.forEach(item => {
+        const div = document.createElement("div");
+        div.classList.add("dropped-item");
+
+        div.innerHTML = `
+          <span>${item.name} (${item.cal} kcal)</span>
+          <button class="delete-btn" onclick="deleteFood(this)">X</button>
+        `;
+
+        target.appendChild(div);
+      });
+    }
+
+    /* ------------------------------
+       페이지 열릴 때 자동 복구
+    ------------------------------ */
+    window.onload = () => {
+      loadMeals();
+    };
+
+    /* ------------------------------
        음식 검색 기능
-    ============================= */
+    ------------------------------ */
     function filterFoods() {
       const search = document.getElementById("searchFood").value.toLowerCase();
       const items = document.querySelectorAll("#foodContainer .food-item");
       const categories = document.querySelectorAll("#foodContainer .category-title");
 
-      // 음식 필터링
       items.forEach(item => {
         const text = item.textContent.toLowerCase();
         item.style.display = text.includes(search) ? "" : "none";
       });
 
-      // 카테고리 제목 표시 여부 결정
       categories.forEach(category => {
         let next = category.nextElementSibling;
         let visible = false;

@@ -1,67 +1,70 @@
+/* ===========================================
+   전체 페이지 공통 스타일
+=========================================== */
+body {
+    background-color: #f4f6fa;
+    font-family: "Pretendard", sans-serif;
+}
+
+/* 전체 페이지를 감싸는 중앙 컨테이너 */
+.meal-wrapper {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px 25px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.title-with-images {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px; /* 글자와 이미지 사이 간격 */
+    margin-bottom: 0;
+}
+
+.title-img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+}
+
+.left-img {
+    margin-right: 5px;
+}
+
+
+.subtitle {
+    text-align: center;
+    font-size: 18px;
+    margin-bottom: 20px;
+    margin-top: 0;
+}
+
+/* ===========================================
+   메인 레이아웃 (좌측 리스트 + 우측 드롭존)
+=========================================== */
 .container {
     display: flex;
     gap: 30px;
-    padding: 20px;
+    padding: 20px 0;
 }
 
-.food-list {
-    width: 40%;
-    border: 1px solid #ccc;
-    padding: 15px;
-    border-radius: 10px;
-    background: #fafafa;
+/* 반응형 (모바일) */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .food-list, .meal-area {
+        width: 100% !important;
+    }
 }
 
-.food-item {
-    padding: 10px;
-    margin: 6px 0;
-    border: 1px solid #ddd;
-    background: white;
-    cursor: grab;
-    border-radius: 6px;
-}
-
-.meal-area {
-    width: 60%;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.meal-box {
-    border: 2px dashed #bbb;
-    padding: 15px;
-    min-height: 120px;
-    border-radius: 10px;
-    background: #fff;
-}
-
-.meal-box .dropped-item {
-    padding: 8px;
-    background: #e9ffe8;
-    border: 1px solid #b2ffb2;
-    margin: 5px 0;
-    border-radius: 5px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.delete-btn {
-    background: #ff6b6b;
-    border: none;
-    color: white;
-    padding: 4px 7px;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-#total-cal {
-    font-size: 20px;
-    font-weight: bold;
-    margin-top: 20px;
-}
-
+/* ===========================================
+   왼쪽 음식 리스트 영역
+=========================================== */
 .food-list {
     width: 40%;
     border: 1px solid #ccc;
@@ -69,11 +72,11 @@
     border-radius: 10px;
     background: #fafafa;
 
-    /* 🔥 음식이 많아도 영역 안에서만 스크롤 */
+    /* 음식이 많아도 영역 안에서만 스크롤 */
     height: 600px;
-    overflow-y: scroll;
+    overflow-y: auto;
 
-    /* 스크롤바 예쁘게 */
+    /* 스크롤바 꾸미기 */
     scrollbar-width: thin;
     scrollbar-color: #ccc #f1f1f1;
 }
@@ -84,4 +87,91 @@
 .food-list::-webkit-scrollbar-thumb {
     background: #ccc;
     border-radius: 10px;
+}
+
+/* 검색창 */
+.search-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    border: 1px solid #bbb;
+}
+
+/* 음식 아이템 */
+.food-item {
+    padding: 10px;
+    margin: 6px 0;
+    border: 1px solid #ddd;
+    background: #ffffff;
+    cursor: grab;
+    border-radius: 6px;
+}
+
+/* ===========================================
+   오른쪽 식단 드롭존 영역
+=========================================== */
+.meal-area {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* 드롭존 박스 */
+.meal-box {
+    border: 2px dashed #bbb;
+    padding: 15px;
+    min-height: 120px;
+    border-radius: 10px;
+    background: #ffffff;
+}
+
+/* 드롭된 음식 */
+.meal-box .dropped-item {
+    padding: 8px;
+    background: #ffffe8;
+    border: 1px solid #cbcbcb;
+    margin: 5px 0;
+    border-radius: 5px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* 삭제 버튼 */
+.delete-btn {
+    background: #ff6b6b;
+    border: none;
+    color: white;
+    padding: 4px 7px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* 칼로리 표시 */
+.total-calorie {
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.calorie-message {
+    font-size: 18px;
+    margin-top: -10px;
+}
+
+/* 뒤로가기 버튼 */
+.back-btn {
+    margin-top: 25px;
+    padding: 10px 20px;
+    background: #a0b2db;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.back-btn:hover {
+    background: #8493b5;
 }
