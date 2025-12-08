@@ -5,7 +5,7 @@
  - 차언주(djswn)
  - 최지웅(cjww543210)
 ## 데모 화면
-<img width="1440" height="900" alt="main" src="https://github.com/user-attachments/assets/868107bd-93d6-41d5-9bf5-b58e846297ce" />
+
 ## 프로젝트 구조
 ```
 BodyBuddy/
