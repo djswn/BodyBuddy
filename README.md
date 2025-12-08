@@ -9,20 +9,20 @@
 ## 프로젝트 구조
 ```
 BodyBuddy/
-├── utils/      # 계산 함수
-├── static/     # CSS ,JS, 이미지 파일 
-├── templates/  # HTML 템플릿
-├── app.py      # Flask 메인 실행 파일
+├── utils/
+├── static/ 
+├── templates/
+├── LICENSE
 ├── README.md
-└── CONTRIBUTING.md
+├── CONTRIBUTING.md
+└── app.py
 ```
 ## 기술 스택
 - Python
 - Flask
 - Bootstrap
 - HTML5 / CSS3
-- JavaScript (Ajax)
-- JSON 데이터 처리
+- JavaScript
 ## 개발 환경
 ```
 pip install flask
@@ -33,7 +33,7 @@ git clone https://github.com/djswn/BodyBuddy.git
 cd bodyBuddy
 python app.py
 ```
-http://127.0.0.1:5000 접속
+실행 후 http://127.0.0.1:5000 접속
 ## 주요 기능
 1. 회원가입, 로그인 기능
 2. 사용자 정보 기록
@@ -43,9 +43,5 @@ http://127.0.0.1:5000 접속
 6. 체중에 따라 동적 변화하는 캐릭터 화면
 7. 체중 정보를 저장하여 나타내는 변동 그래프
 8. 설정한 목표 기간이 다 되었을 때, 목표 체중 사이의 알림 기능
-## 향후 개선 계획
-- 다국어 지원
-- 모바일 최적화
-- 사용자를 위한 여러 알림 기능
-## CONTACT
+## 연락처
 cej0836@naver.com
