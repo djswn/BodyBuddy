@@ -1,11 +1,11 @@
 # BodyBuddy
-현대인의 체중 관리와 건강한 습관 형성을 돕기 위해 개발된 BodyBuddy를 사용하는 누구든 사용자의 정보를 입력받아 저장하고, BMI/BMR, 권장 칼로리 계산과 맞춤형 식단 구성까지 제공합니다.
+현대인의 체중 관리와 건강한 습관 형성을 돕기 위해 개발되었습니다. 사용자의 정보를 입력받아 BMI/BMR, 권장 칼로리 계산과 맞춤형 식단 구성등을 제공합니다.
 ## 멤버구성
  - 강지민(JM030220)
  - 차언주(djswn)
  - 최지웅(cjww543210)
 ## 데모 화면
-![BodyBuddy 메인페이지](docs/images/mainpage.png)
+<img width="1440" height="900" alt="main" src="https://github.com/user-attachments/assets/868107bd-93d6-41d5-9bf5-b58e846297ce" />
 ## 프로젝트 구조
 ```
 BodyBuddy/
